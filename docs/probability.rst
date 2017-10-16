@@ -52,6 +52,35 @@ Seeding the random number sequence::
 	 [9]  0.92552126  0.48297852
 	 
 
+Coin Tossing
+------------------------
+
+Bernoulli trials can be generated from the binomial distribution.
+Here is a way to generate a sequence of trials::
+
+	> rbinom(10, size=1, prob=0.5)
+	 [1] 0 1 0 1 1 1 0 0 1 1
+
+We can use ``table`` to verify the distribution of 0s and 1s::
+
+	> table(rbinom(1000, size=1, prob=0.5))
+
+	  0   1 
+	513 487 
+
+Varying the probability of 1 has the desired impact::
+
+	> table(rbinom(1000, size=1, prob=0.4))
+
+	  0   1 
+	629 371 
+
+
+
+
+
+
+
 Sampling Data
 -----------------------
 
@@ -281,9 +310,9 @@ Finally, we use ``rnorm`` for generating random numbers from the normal distribu
 
 .. rubric:: Hazard function
 
-.. math:: Hazard function is given by
+Hazard function is given by :math:`H(x) = - log (1 - F(x))`.
 
-	H(x) = - log (1 - F(x))
+	
 
 This can be computed as follows::
 
@@ -292,11 +321,12 @@ This can be computed as follows::
 	[1] 1.841022
 
 
+.. rubric:: Log likelihood
+
 .. index:: log-likelihood
 
-.. math:: Log likelihood function is given by::
-
-	log (f(x))
+Log likelihood function is given by :math:`log (f(x))`.
+	
 
 This can be computed by:: 
 
@@ -304,6 +334,40 @@ This can be computed by::
 	[1] -0.9189385
 
 
+Discrete Distribution
+-------------------------------
+
+Let us define our sample space::
+
+	> sample.space <- c(1,2,3, 4)
+
+Let us define the probability mass function over the sample space::
+
+	> pmf <- c(0.25, 0.3, 0.35, 0.1)
+	> sum(pmf)
+	[1] 1
+
+Let's draw some samples from this distribution::
+
+	> sample(sample.space, size=10, replace=T, prob=pmf)
+	 [1] 2 3 3 3 3 4 2 1 3 2
+
+Let's tabulate them for large number of samples::
+
+	> table(sample(sample.space, size=10000, replace=T, prob=pmf))
+
+	   1    2    3    4 
+	2578 3059 3383  980 
+
+Let's verify their proportions::
+
+	> prop.table(table(sample(sample.space, size=10000, replace=T, prob=pmf)))
+
+	     1      2      3      4 
+	0.2522 0.3029 0.3505 0.0944 
+
+
+Note that this matches quite well with the original probability mass function.
 
 Kernel Density Estimation
 ------------------------------------

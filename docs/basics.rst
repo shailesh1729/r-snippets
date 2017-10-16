@@ -68,7 +68,7 @@ Computing the step size of a sequence automatically::
 	> seq(from=4, to=-4, length=5)
 	[1]  4  2  0 -2 -4
 
-.. index:: sum
+.. index:: sum, +
 
 Summing two vectors::
 	
@@ -77,6 +77,23 @@ Summing two vectors::
 Summing elements of a vector::
 
 	> s = sum(v1)
+
+
+.. index:: cumsum
+
+Cumulative sum::
+
+	> x <- c(1,3, 2, -1, 4,-6)
+	> cumsum(x)
+	[1] 1 4 6 5 9 3
+
+Product of all elements::
+
+	> x <- c(1,3, 2, -1, 4,-6)
+	> prod(x)
+	[1] 144
+
+
 
 
 Sorting::
@@ -1346,3 +1363,35 @@ Updating the data frame through attached variables::
 	[1] 4 4 4
 	> y
 	[1] 3 2 1
+
+
+
+Time Series
+--------------------------------
+
+Creating a time series from an observation vector::
+
+	> observations <- sample(1:10, 24, replace=T)
+	> observations
+	 [1]  2  7  2  6  2  5  5  8  8  6  4  9  8  6  3  2  5  1  2  5  4  8  5 10
+	> time_series <- ts(observations, start=c(2016,1), frequency=12)
+	> time_series
+	     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+	2016   2   7   2   6   2   5   5   8   8   6   4   9
+	2017   8   6   3   2   5   1   2   5   4   8   5  10
+
+Some properties of time series::
+
+	> class(time_series)
+	[1] "ts"
+	> mode(time_series)
+	[1] "numeric"
+	> typeof(time_series)
+	[1] "integer"
+
+
+Extracting a window from the time series::
+
+	> window(time_series, start=c(2016, 7), end=c(2016, 12))
+	     Jul Aug Sep Oct Nov Dec
+	2016   5   8   8   6   4   9

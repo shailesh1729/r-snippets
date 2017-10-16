@@ -354,6 +354,24 @@ Summary::
 	 Max.   :17.400   Max.   :337.0   Max.   :91.00   Max.   :46.00  
 
 
+Titanic dataset
+----------------------------
+
+It is a 4-dimensional array resulting from cross-tabulating 2201 observations on 4 variables. 
+
+The 4 dimensions are:
+
+#. Class: 1st, 2nd, 3rd, Crew
+#. Sex: Male Female
+#. Age: Child Adult
+#. Survived: No, Yes
+
+::
+
+	> dim(Titanic)
+	[1] 4 2 2 2
+
+
 
 Datasets in the datasets Package
 ---------------------------------------

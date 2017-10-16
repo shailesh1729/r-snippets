@@ -120,9 +120,150 @@ Computing variance by combining multiple functions::
 
 Defining a function::
 
-	function (arglist){
+	function_name <- function (arglist){
 		body
 	}
+
+Defining our own mean function::
+
+	my_mean <- function(x){
+	   s <- sum(x)
+	   n <- length(x)
+	   s / n
+	}
+
+Using the function:: 
+
+	> my_mean(rivers)
+	[1] 591.1844
+
+Verifying against built-in implementation of mean:: 
+
+	> mean(rivers)
+	[1] 591.1844
+
+
+A log-sum-exp function::
+
+	log_sum_exp <- function(x){
+	  xx <- exp(x)
+	  xxx <- sum(xx)
+	  log(xxx)
+	}
+
+Let us store its definition into a file named ``my_functions.R``.
+
+.. index:: source
+
+Loading the function definition::
+
+	> source('my_functions.R')
+
+Calling the function::
+
+	> log_sum_exp(10)
+	[1] 10
+	> log_sum_exp(c(10, 12))
+	[1] 12.12693
+	> log_sum_exp(sample(1:100, 100, replace=T))
+	[1] 100.4429
+
+
+.. rubric:: Recursive Functions
+.. index:: recursion
+
+Let us solve the Tower of Hanoi problem in R::
+
+	hanoi <- function(num_disks, from, to, via, disk_num=num_disks){
+		if (num_disks == 1){
+			cat("move disk", disk_num,  "from ", from, "to", to, "\n")
+		}else{
+	        hanoi(num_disks-1, from, via, to)
+			hanoi(1, from, to, via, disk_num)
+			hanoi(num_disks-1, via, to, from)
+		}
+	}
+
+
+Let's see this in action::
+
+
+	> hanoi(1,'a', 'b', 'c')
+	move disk 1 from  a to b 
+	> hanoi(2,'a', 'b', 'c')
+	move disk 1 from  a to c 
+	move disk 2 from  a to b 
+	move disk 1 from  c to b 
+	> hanoi(3,'a', 'b', 'c')
+	move disk 1 from  a to b 
+	move disk 2 from  a to c 
+	move disk 1 from  b to c 
+	move disk 3 from  a to b 
+	move disk 1 from  c to a 
+	move disk 2 from  c to b 
+	move disk 1 from  a to b 
+
+
+Closure in Lexical Scope
+'''''''''''''''''''''''''''''''''''''''
+.. index:: scope, lexical scope, <<-
+
+Accessing variable in the lexical scope::
+
+
+	fourth_power <- function(n){
+	  sq <- function() n* n
+	  sq() * sq()
+	}
+
+
+Let's see this function in action::
+
+	> fourth_power(2)
+	[1] 16
+	> fourth_power(3)
+	[1] 81
+
+
+Let's create a counter generator function::
+
+	counter <- function(n){
+	  list(
+	    increase = function(){
+	      n <<- n+1
+	    },
+	    decrease = function(){
+	      n <<- n-1
+	    },
+	    value = function(){
+	      n
+	    }
+	  )
+	}
+
+The value ``n`` is the initial value of the counter. This gets stored
+in the closure for the function. The function returns a list
+whose members are functions which manipulate the value of
+``n`` sitting in the closure.
+
+The operator ``<<-`` is used to update a variable in lexical scope.
+
+Let's now construct a counter object::
+
+	> v <- counter(10)
+	> v$value()
+	[1] 10
+
+Let's increase and decrease counter values::
+
+	> v$increase()
+	> v$increase()
+	> v$value()
+	[1] 12
+	> v$decrease()
+	> v$decrease()
+	> v$value()
+	[1] 10
 
 
 
@@ -757,4 +898,128 @@ Coercion is applied when necessary::
 	[3,] "1"  "bb" "TRUE" "4.5"
 	[4,] "1"  "bb" "TRUE" "4.5"
 
+
+
+Missing Data
+----------------------------
+
+.. index:: na, missing values, missing data
+
+R has extensive support for missing data.
+
+A vector with missing values::
+
+	> x <- c(1, -1, 1, NA, -2, 1, -3, 4, NA, NA, 3, 2, -4, -3, NA)
+
+Identifying entries in ``x`` which are missing::
+
+	> is.na(x)
+	 [1] FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE  TRUE
+
+Extracting non-missing values from ``x``::
+
+	> x[!is.na(x)]
+	 [1]  1 -1  1 -2  1 -3  4  3  2 -4 -3
+
+
+By defaulting summing NA values gives us NA::
+
+	> sum(x)
+	[1] NA
+
+We can ignore missing values while calculating the sum::
+
+	> sum(x, na.rm = T)
+	[1] -1
+
+
+Ignoring missing values for calculating mean::
+
+	> mean(x)
+	[1] NA
+	> mean(x, na.rm = T)
+	[1] -0.09090909
+
+Ignoring missing values for calculating variance::
+
+	> var(x)
+	[1] NA
+	> var(x, na.rm = T)
+	[1] 7.090909
+
+
+Recording a missing value::
+
+	> x[1] <- NA
+
+
+.. index:: na.omit
+
+Creating a new dataset without the missing data::
+
+	> y<-na.omit(x)
+	> y
+	 [1] -1  1 -2  1 -3  4  3  2 -4 -3
+	attr(,"na.action")
+	[1]  1  4  9 10 15
+	attr(,"class")
+	[1] "omit"
+
+.. index:: na.fail
+
+
+Failing and error out in presence of missing values::
+
+	> na.fail(x)
+	Error in na.fail.default(x) : missing values in object
+	> na.fail(y)
+	 [1] -1  1 -2  1 -3  4  3  2 -4 -3
+	attr(,"na.action")
+	[1]  1  4  9 10 15
+	attr(,"class")
+	[1] "omit"
+
+
+
+
+Classes
+-------------------------
+
+A generic function performs a task or action on its arguments specific to the class of the argument itself.
+If the argument doesn't have a class attribute, then the default version of the generic function is called.
+
+Various versions of the generic function ``plot``::
+
+	> methods(plot)
+	 [1] plot.acf*           plot.bclust*        plot.data.frame*    plot.decomposed.ts* plot.default       
+	 [6] plot.dendrogram*    plot.density*       plot.ecdf           plot.factor*        plot.formula*      
+	[11] plot.function       plot.hclust*        plot.histogram*     plot.HoltWinters*   plot.ica*          
+	[16] plot.isoreg*        plot.lm*            plot.medpolish*     plot.mlm*           plot.ppr*          
+	[21] plot.prcomp*        plot.princomp*      plot.profile.nls*   plot.raster*        plot.SOM*          
+	[26] plot.somgrid*       plot.spec*          plot.stepfun        plot.stft*          plot.stl*          
+	[31] plot.svm*           plot.table*         plot.ts             plot.tskernel*      plot.TukeyHSD*     
+	[36] plot.tune*         
+
+
+
+Generic methods associated with ``matrix`` class::
+
+	> methods(class="matrix")
+	 [1] anyDuplicated as.data.frame as.raster     boxplot       coerce        determinant   duplicated   
+	 [8] edit          head          initialize    isSymmetric   Math          Math2         Ops          
+	[15] relist        subset        summary       tail          unique       
+
+
+Generic methods associated with ``table`` class::
+
+	> methods(class="table")
+	 [1] [             aperm         as.data.frame Axis          coerce        head          initialize   
+	 [8] lines         plot          points        print         show          slotsFromS3   summary      
+	[15] tail         
+
+
+Some of the functions may not be visible. They are marked with *::
+
+	> methods(coef)
+	[1] coef.aov*     coef.Arima*   coef.default* coef.listof*  coef.maov*    coef.nls*    
 

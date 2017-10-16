@@ -29,12 +29,12 @@ for specific tasks, you can refer to these notes.
    text_processing
    data
    linear_algebra
-   optimization/index
    probability
    stats/index
+   graphics/index
+   optimization/index
    regression
    models/index
-   graphics
    testdata
 
 

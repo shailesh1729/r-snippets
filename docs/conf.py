@@ -53,8 +53,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'R Snippets'
-copyright = '2017, Shailesh'
-author = 'Shailesh'
+copyright = '2017, Shailesh Kumar'
+author = 'Shailesh Kumar'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

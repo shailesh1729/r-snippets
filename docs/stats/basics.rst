@@ -79,6 +79,133 @@ obtained simultaneously::
 	 3rd Qu.:18.90   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:4.000   3rd Qu.:4.000  
 	 Max.   :22.90   Max.   :1.0000   Max.   :1.0000   Max.   :5.000   Max.   :8.000  
 
+.. rubric:: Variance
+.. index:: variance, var
+
+Computing the sample variance::
+
+	> var(mtcars$mpg)
+	[1] 36.3241
+
+The mean square value::
+
+	> n <- length(mtcars$mpg)
+	> ms <- sum(mtcars$mpg^2) / n
+	> ms
+	[1] 438.8222
+
+Verifying the variance and mean square value relationship::
+
+	> ms - mean(mtcars$mpg)^2
+	[1] 35.18897
+	> var(mtcars$mpg)  * (n - 1) / n
+	[1] 35.18897
+
+
+
+
+.. index:: sd, standard deviation
+
+
+Computing the standard deviation::
+
+	> sd(mtcars$mpg)
+	[1] 6.026948
+
+
+
+
+.. rubric:: Tukey Five Number Summary
+
+.. index:: Tukey five number summary, fivenum
+
+The five numbers include: minimum, lower-hinge, median, upper-hinge, maximum::
+
+	> fivenum(mtcars$mpg)
+	[1] 10.40 15.35 19.20 22.80 33.90
+
+
+.. rubric:: Quantiles
+
+.. index:: quantile
+
+Computing the quantiles of a given data::
+
+	> quantile(mtcars$mpg)
+	    0%    25%    50%    75%   100% 
+	10.400 15.425 19.200 22.800 33.900 
+	> quantile(sort(mtcars$mpg))
+	    0%    25%    50%    75%   100% 
+	10.400 15.425 19.200 22.800 33.900 
+	> quantile(mtcars$mpg, probs=c(0.1, 0.2, 0.4, 0.8, 1.0))
+	  10%   20%   40%   80%  100% 
+	14.34 15.20 17.92 24.08 33.90 
+
+.. index:: IQR, inter quantile range
+
+::
+
+	> IQR(mtcars$mpg)
+	[1] 7.375
+
+
+.. index:: median absolute deviation, mad
+.. rubric:: Median Absolute Deviation
+
+::
+
+	> mad(mtcars$mpg)
+	[1] 5.41149
+
+
+
+.. rubric:: Skewness
+.. index:: skewness
+
+This is available in ``e1071`` library::
+
+	> library(e1071)
+	> skewness(mtcars$mpg)
+	[1] 0.610655
+	> skewness(discoveries)
+	[1] 1.2076
+
+
+.. rubric:: Kurtosis
+.. index:: kurtosis
+
+This is available in ``e1071`` library::
+
+	> library(e1071)
+	> kurtosis(mtcars$mpg)
+	[1] -0.372766
+	> kurtosis(discoveries)
+	[1] 1.989659
+
+* Samples with negative kurtosis value are called *platykurtic*.
+* Samples with positive kurtosis values are called *leptokurtic*.
+* Samples with kurtosis very close to 0 are called *mesokurtic*.
+
+.. rubric:: Scaling or Standardizing a Variable
+
+.. index:: scale, scaling, zero mean  unit variance
+
+Let us pick a variable and check its mean and variance::
+
+	> x <- mtcars$mpg
+	> mean(x)
+	[1] 20.09062
+	> var(x)
+	[1] 36.3241
+
+Let us now scale it to zero mean unit variance::
+
+	> y <- scale(x)
+	> mean(y)
+	[1] 7.112366e-17
+	> var(y)
+	     [,1]
+	[1,]    1
 
 
 Group wise statistics
@@ -141,6 +268,19 @@ When we factor a list into levels, we can compute the frequency table from the f
 	statesf
 	    Alabama      Alaska     Arizona  California    Colorado Connecticut    Delaware     Florida     Georgia 
 	          1           1           1           2           2           2           3           5           3 
+
+
+.. index:: prop.table
+
+Looking at the tabulation in proportional terms::
+
+	> states <- sample(datasets::state.name[1:10], 20, replace=TRUE)
+	> statesf <- factor(states)
+	> prop.table(table(statesf))
+	statesf
+	   Alabama     Alaska   Arkansas California   Colorado   Delaware    Florida    Georgia 
+	      0.05       0.10       0.25       0.15       0.05       0.15       0.15       0.10 
+
 
 
 
