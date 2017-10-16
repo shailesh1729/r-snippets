@@ -195,6 +195,39 @@ Summary::
 	 Max.   :22.90   Max.   :1.0000   Max.   :1.0000   Max.   :5.000   Max.   :8.000 
 
 
+Scaling the variables::
+
+	> mtcars.scaled <- scale(mtcars)
+
+Computing the covariance matrix::
+
+	> mtcars.scaled.cov <- cov(mtcars.scaled)
+
+
+Identifying variable pairs with significant covariance::
+
+	> abs(mtcars.scaled.cov) > 0.8
+	       mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+	mpg   TRUE  TRUE  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE
+	cyl   TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE
+	disp  TRUE  TRUE  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE
+	hp   FALSE  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+	drat FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE
+	wt    TRUE FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE
+	qsec FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE
+	vs   FALSE  TRUE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE
+	am   FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE
+	gear FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE
+	carb FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE
+
+
+Relationship between miles per gallon and displacement::
+
+	> ggplot(mtcars) + geom_point(mapping=aes(x=mpg, y=disp))
+
+
+.. image:: images/mtcars_mpg_disp.png
+
 
 iris Data Set
 -------------------

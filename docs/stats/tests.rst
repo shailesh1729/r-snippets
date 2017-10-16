@@ -81,7 +81,45 @@ Unpaired T-Test
 ---------------------
 For testing the equality of means
 
-TODO
+Let us generate some data from standard normal distribution::
+
+	> x <- rnorm(100)
+
+Let us run the test to verify that the mean is indeed zero::
+
+	> t.test(x)
+
+		One Sample t-test
+
+	data:  x
+	t = -0.75685, df = 99, p-value = 0.4509
+	alternative hypothesis: true mean is not equal to 0
+	95 percent confidence interval:
+	 -0.2401063  0.1075127
+	sample estimates:
+	 mean of x 
+	-0.0662968 
+
+Here the null hypothesis is that the mean is 0. The alternative hypothesis is that mean is not zero.
+
+The p-value is 0.45 which is much larger than 0.05. We have very weak evidence against the null 
+hypothesis.
+
+Let's try again with a non-zero mean sample::
+
+	> x <- rnorm(100, mean=1)
+	> t.test(x)
+
+		One Sample t-test
+
+	data:  x
+	t = 10.577, df = 99, p-value < 2.2e-16
+	alternative hypothesis: true mean is not equal to 0
+	95 percent confidence interval:
+	 0.871659 1.274210
+	sample estimates:
+	mean of x 
+	 1.072934 
 
 
 Classical T-Test
