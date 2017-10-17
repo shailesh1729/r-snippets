@@ -2,6 +2,68 @@ Language Facilities
 ======================
 
 
+Operator precedence rules
+-------------------------------
+
+
+* Function calls and grouping expressions:  (), {}
+* Index and lookup operators: 
+	* Indexing: [], [[]]
+	* Namespace access: ::, :::
+	* Component, slot extraction: $, @
+* Arithmetic:
+	* Exponentiation: ^ (right to left)
+	* Unary plus, minus: +, -
+	* Sequence operator: : 
+	* Special operators: %any%, %%, %/%, %*%, %o%
+	* Multiply, Divide: *, /
+	* add, subtract : +, -
+* Comparison: <, > , <=, >=, ==, != 
+* Negation : !
+* And: &, &&
+* Or: |  , ||
+* Formulas: ~
+* Right wise Assignment: ->, ->>
+* Assignment =
+* Assignment (right to left) <-, <<-
+* Help: ?
+
+
+Expressions
+------------------
+
+One expression per line::
+
+	> x <-1
+	> y <- x+2
+	> z <- y + x
+	> x
+	[1] 1
+	> y
+	[1] 3
+	> z
+	[1] 4
+
+.. index:: ;
+
+Multiple expressions in single line::
+
+	> x <- 1; y <- x+2; z <- y + x
+	> x; y; z
+	[1] 1
+	[1] 3
+	[1] 4
+
+
+.. index:: {}
+
+Series of expressions followed by a value::
+
+	> {x <- 1; y <- x+2; z <- y + x; z}
+	[1] 4
+
+
+
 Flow Control
 ----------------------
 .. index:: flow control
@@ -12,6 +74,8 @@ Help about control flow::
 
 
 .. index:: if
+
+.. rubric:: if, else, ifelse
 
 if ::
 
@@ -58,15 +122,68 @@ Element wise logical operations::
 	> v1 & v2
 	[1]  TRUE FALSE FALSE FALSE
 
+
+.. index:: repeat
+
+.. rubric:: repeat
+
+A simple repeat  loop ::
+
+	> x <- 10
+	> repeat { if (x == 0) break ; x = x - 1; print(x)}
+	[1] 9
+	[1] 8
+	[1] 7
+	[1] 6
+	[1] 5
+	[1] 4
+	[1] 3
+	[1] 2
+	[1] 1
+	[1] 0
+
+If your repeat loop is stuck in an infinite loop, press ESC key.
+
 .. index:: for
 
-For loop::
+.. rubric:: for
+
+Simple for loops::
+
+	> for (i in seq(1,10)) print(i)
+	[1] 1
+	[1] 2
+	[1] 3
+	[1] 4
+	[1] 5
+	[1] 6
+	[1] 7
+	[1] 8
+	[1] 9
+	[1] 10
+	> for (i in seq(1,10, by=2)) print(i)
+	[1] 1
+	[1] 3
+	[1] 5
+	[1] 7
+	[1] 9
+
+Results are not printed inside a loop without using the ``print`` function as above::
+
+	> for (i in seq(1,10)) i
+	> 
+
+
+For loop for computing sum of squares::
 
 	ul <- rnorm(30)
 	usq <- 0
 	for (i in 1:10){
 		usq <- ul[i] * ul[i]
 	}
+
+
+Off course a better solution is ``sum(ul^2)``.
 
 .. index:: nested for
 
@@ -84,7 +201,10 @@ Nested for loops::
 
 .. index:: while
 
-While loop::
+.. rubric:: while
+
+
+A simple while loop::
 
 	> i <- 10; while ( i < 20 ) {i <- i +1; print(i)}
 	[1] 11
@@ -97,6 +217,87 @@ While loop::
 	[1] 18
 	[1] 19
 	[1] 20
+
+.. index:: next, continue
+
+While loop with next and break :: 
+
+	> i <- 10; while (T) {i <- i +1; if (i == 20) break; if ( i %% 2 == 0) next; print(i);}
+	[1] 11
+	[1] 13
+	[1] 15
+	[1] 17
+	[1] 19
+
+
+.. index:: iter, iterators
+
+..rubric:: iterators
+
+Installing the package:: 
+
+	> install.packages('iterators')
+
+
+Loading the package:: 
+
+	> library(iterators)
+
+Creating an iterator::
+
+	> ii <- iter(1:4)
+
+Using the iterator::
+
+	> nextElem(ii)
+	[1] 1
+	> nextElem(ii)
+	[1] 2
+	> nextElem(ii)
+	[1] 3
+	> nextElem(ii)
+	[1] 4
+	> nextElem(ii)
+	Error: StopIteration
+
+An iterator recycling the elements::
+
+	> ii <- iter(1:4, recycle = T)
+	> for (i in 1:10) print(nextElem(ii))
+	[1] 1
+	[1] 2
+	[1] 3
+	[1] 4
+	[1] 1
+	[1] 2
+	[1] 3
+	[1] 4
+	[1] 1
+	[1] 2
+
+
+.. index:: foreach
+
+.. rubric:: foreach
+
+Installing the package:: 
+
+	> install.packages('foreach')
+
+Loading the library::
+
+	> library(foreach)
+
+Checking the variation on growth of income with compounded interest rate::
+
+	> unlist(foreach(i=1:10) %do% {100 * (1 + i/100)^5})
+	 [1] 105.1010 110.4081 115.9274 121.6653 127.6282 133.8226 140.2552 146.9328 153.8624 161.0510
+
+It works with iterators too::
+
+	> unlist(foreach(i=iter(1:10)) %do% {100 * (1 + i/100)^5})
+	 [1] 105.1010 110.4081 115.9274 121.6653 127.6282 133.8226 140.2552 146.9328 153.8624 161.0510
+
 
 
 Functions
@@ -286,6 +487,25 @@ Installing a package::
 Loading a package::
 
 	> library("geometry")
+
+List of currently installed packages::
+
+	> search()
+	 [1] ".GlobalEnv"        "package:foreach"   "package:iterators" "package:MASS"     
+	 [5] "package:ggplot2"   "package:e1071"     "tools:rstudio"     "package:stats"    
+	 [9] "package:graphics"  "package:grDevices" "package:utils"     "package:datasets" 
+	[13] "package:methods"   "Autoloads"         "package:base"     
+
+This may vary in your setup.
+
+List of loaded namespaces::
+
+	> loadedNamespaces()
+	 [1] "Rcpp"       "codetools"  "grDevices"  "class"      "foreach"    "MASS"      
+	 [7] "grid"       "plyr"       "gtable"     "e1071"      "datasets"   "scales"    
+	[13] "ggplot2"    "rlang"      "utils"      "lazyeval"   "graphics"   "base"      
+	[19] "labeling"   "iterators"  "tools"      "munsell"    "compiler"   "stats"     
+	[25] "colorspace" "methods"    "tibble"    
 
 
 
@@ -1022,4 +1242,21 @@ Some of the functions may not be visible. They are marked with *::
 
 	> methods(coef)
 	[1] coef.aov*     coef.Arima*   coef.default* coef.listof*  coef.maov*    coef.nls*    
+
+
+Defining our own operators
+------------------------------------
+
+Let us define a  distance operator::
+
+	> `%d%` <- function(x, y) { sqrt(sum((x-y)^2)) }
+
+Let us use the operator for calculating distances between points::
+
+	> c(1,0, 0) %d% c(0,1,0)
+	[1] 1.414214
+	> c(1,1, 0) %d% c(0,1,0)
+	[1] 1
+	> c(1,1, 1) %d% c(0,1,0)
+	[1] 1.414214
 

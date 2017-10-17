@@ -442,3 +442,59 @@ A more reliable approach for automatic estimation of bandwidth::
 .. image:: images/faithful_eruptions_density_estimate_sj.png
 
 
+
+
+Bivariate Normal Distribution
+------------------------------------
+
+In this section, we will look at different ways to generate samples from bivariate normal distribution.
+
+Let our random variable be denoted as X = (X1, X2). Let the number of samples to be generated be N.
+
+The simplest case is when both X1 and X2 are independent standard normal variables::
+
+	> N <- 1000
+	> set.seed(123)
+	> samples <- matrix(rnorm(N*2), ncol=2)
+	> colMeans(samples)
+	[1] 0.01612787 0.04246525
+	> cov(samples)
+	          [,1]      [,2]
+	[1,] 0.9834589 0.0865909
+	[2,] 0.0865909 1.0194419
+
+
+The next case is when the two variables are independent but have different means::
+
+	> mu1 <- 1
+	> mu2 <- 2
+	> samples <- cbind(rnorm(N, mean=mu1), rnorm(N, mean=mu2))
+	> colMeans(samples)
+	[1] 0.9798875 1.9908396
+	> cov(samples)
+	           [,1]       [,2]
+	[1,] 0.95718335 0.04908825
+	[2,] 0.04908825 0.98476186
+
+
+
+There is a function called ``mvrnorm`` in the ``MASS`` package which is very flexible::
+
+	> mu1 <- 1
+	> mu2 <- 2
+	> mu <- c(mu1, mu2)
+	> sd1 <- 2
+	> sd2 <- 4
+	> corr <- 0.6
+	> Sigma <- matrix(c(sd1, corr, corr, sd2), nrow=2)
+	> library(MASS)
+	> N <- 10000
+	> samples <- mvrnorm(N, mu=mu, Sigma=Sigma)
+	> colMeans(samples)
+	[1] 0.9976949 2.0208528
+	> cov(samples)
+	          [,1]      [,2]
+	[1,] 1.9889508 0.6005303
+	[2,] 0.6005303 4.0516402
+
+

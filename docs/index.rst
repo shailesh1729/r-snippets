@@ -36,7 +36,7 @@ for specific tasks, you can refer to these notes.
    regression
    models/index
    testdata
-
+   packages
 
 
 Indices and tables

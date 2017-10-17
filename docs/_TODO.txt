@@ -1,0 +1,40 @@
+
+Language
+----------------
+environments
+calling vs creating environment
+call stack
+attach, detach, save
+error handling (exceptions, stop, warning, try, tryCatch)
+with
+function(match.call, default values, ..., anonymous function, args, 
+formals, closure, alist, body, expression)
+oo: s3, s4, setClass, slots, representation, 
+date time: as.POSIXct setValidity, validObject
+
+Data Manipulation
+---------------------
+transform
+
+Probability Distributions
+-----------------------------
+
+
+Statistics
+---------------------
+confidence interval
+p-value
+hypothesis testing
+
+
+Estimation
+-------------------
+MAP estimation
+Bayesian estimation
+
+
+Tidyverse
+--------------
+ggplot2
+dplyer
+

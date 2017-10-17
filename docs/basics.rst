@@ -1148,6 +1148,37 @@ From list to vector::
 	[1] "a" "b" "c"
 
 
+.. rubric:: List of Expressions
+
+.. index:: alist, eval
+
+We can also prepare a list of expressions:: 
+
+	> list(a=2+3, b=4*3)
+	$a
+	[1] 5
+
+	$b
+	[1] 12
+
+	> alist(a=2+3, b=4*3)
+	$a
+	2 + 3
+
+	$b
+	4 * 3
+
+	> l <- alist(a=2+3, b=4*3)
+	> l$a
+	2 + 3
+	> eval(l$a)
+	[1] 5
+	> eval(l$b)
+	[1] 12
+
+While the ``list`` function evaluates its arguments, ``alist`` doesn't. Finally, 
+we use ``eval`` for evaluating the expressions stored in the list.
+
 
 Factors
 --------------------------
