@@ -29,6 +29,7 @@ for specific tasks, you can refer to these notes.
    text_processing
    data/index
    linear_algebra
+   discrete/index
    probability
    stats/index
    graphics/index
