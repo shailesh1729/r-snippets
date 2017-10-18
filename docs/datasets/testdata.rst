@@ -1,6 +1,8 @@
 Test Data
 ===================
 
+This section contains some simple vectors / matrices etc. useful for examples in this document.
+
 
 Matrices
 -------------------
