@@ -25,9 +25,9 @@ for specific tasks, you can refer to these notes.
    basics
    language
    io
-   datasets
+   datasets/index
    text_processing
-   data
+   data/index
    linear_algebra
    probability
    stats/index
@@ -35,6 +35,7 @@ for specific tasks, you can refer to these notes.
    optimization/index
    regression
    models/index
+   utils/index
    testdata
    packages
 

@@ -1,5 +1,6 @@
-Data Manipulation
-=========================
+dplyr
+===============
+
 
 .. index:: dplyr, tidyverse
 
