@@ -29,7 +29,7 @@ for specific tasks, you can refer to these notes.
    data/index
    linear_algebra
    discrete/index
-   probability
+   prob/index
    stats/index
    graphics/index
    optimization/index

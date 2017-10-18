@@ -8,4 +8,5 @@ Statistics
 
    basics
    tests
+   mle
    
