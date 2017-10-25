@@ -346,6 +346,26 @@ Separate repetition count for each element::
 	> rep(v, c(1,2,3,4))
 	 [1] 1 2 2 3 3 3 4 4 4 4
 
+
+.. index:: %in%, membership
+
+Membership test::
+
+	> 1 %in% 1:4
+	[1] TRUE
+	> 1 %in% 2:4
+	[1] FALSE
+	> 3 %in% 1:4
+	[1] TRUE
+	> 3 %in% c(1:2, 4:8)
+	[1] FALSE
+	> 'a' %in% c('a', 'b', 'c')
+	[1] TRUE
+	> 'aa' %in% c('a', 'aab', 'c')
+	[1] FALSE
+	> 'aa' %in% c('a', 'aa', 'c')
+	[1] TRUE
+
  
 
 Index Vectors
@@ -1290,7 +1310,7 @@ Data Frames
 
 Creating a data frame::
 
-	> t = data.frame(x=c(11,12,13), y=c(21,22,23), z=c(7,20, 10))
+	> df <- data.frame(x=c(11,12,13), y=c(21,22,23), z=c(7,20, 10))
 	   x  y  z
 	1 11 21  7
 	2 12 22 20
@@ -1298,23 +1318,36 @@ Creating a data frame::
 
 Accessing first row::
 
-	> t[1,]
+	> df[1,]
 	   x  y z
 	1 11 21 7
+
+Column names::
+
+	> colnames(df)
+	[1] "x" "y" "z"
+
+Row names::
+
+
+	> rownames(df)
+	[1] "1" "2" "3"
+
+By default, the row names are the auto-generated row numbers.
 
 .. index:: $; data frame
 
 Accessing named columns::
 
-	> t$x
+	> df$x
 	[1] 11 12 13
-	> t$y
+	> df$y
 	[1] 21 22 23
 
 
 Accessing columns by number::
 
-	> t[,1]
+	> df[,1]
 	[1] 11 12 13
 
 Another example::
@@ -1330,13 +1363,13 @@ Another example::
 
 Summing each column::
 
-	> colSums(t)
+	> colSums(df)
 	 x  y  z 
 	36 66 37
 
 Summing each row::
 
-	> rowSums(t)
+	> rowSums(df)
 	[1] 39 54 46
 
 
@@ -1352,49 +1385,235 @@ Data frame from a list::
 	2 2 2
 	3 3 1
 
+Seeing first few rows of a large data frame::
+
+	> df <- data.frame(x=1:40, y=(1:40)^2, z=(1:40)^3)
+	> head(df)
+	  x  y   z
+	1 1  1   1
+	2 2  4   8
+	3 3  9  27
+	4 4 16  64
+	5 5 25 125
+	6 6 36 216
+	> head(df, n=4)
+	  x  y  z
+	1 1  1  1
+	2 2  4  8
+	3 3  9 27
+	4 4 16 64
+
+Seeing last few rows of a large data frame::
+
+	> tail(df)
+	    x    y     z
+	35 35 1225 42875
+	36 36 1296 46656
+	37 37 1369 50653
+	38 38 1444 54872
+	39 39 1521 59319
+	40 40 1600 64000
+	> tail(df, n=3)
+	    x    y     z
+	38 38 1444 54872
+	39 39 1521 59319
+	40 40 1600 64000
+
+Seeing some random rows from a data frame::
+
+	> dplyr::sample_n(df, 4)
+	    x   y     z
+	13 13 169  2197
+	12 12 144  1728
+	30 30 900 27000
+	27 27 729 19683
+
+It is also possible to sample with replacement::
+
+	> df <- data.frame(x=1:4, y=(1:4)^2, z=(1:4)^3)
+	> dplyr::sample_n(df, 6, replace=T)
+	    x  y  z
+	2   2  4  8
+	2.1 2  4  8
+	4   4 16 64
+	2.2 2  4  8
+	2.3 2  4  8
+	3   3  9 27
+
+
 .. index:: attach, detach
 
-Attaching workspace to columns of data frame::
+.. rubric:: Attaching workspace to columns of data frame
+
+
+Let's create a data frame::
 
 	> df <- data.frame(x=c(1,2,3), y=c(3,2,1))
+
+At this moment, x and y are not available in the search path::
+
 	> x
 	Error: object 'x' not found
+
+Let's now attach the variables in data frame on the search path::
+
 	> attach(df)
+
+We can now access x and y directly::
+
 	> x
 	[1] 1 2 3
 	> y
 	[1] 3 2 1
+
+Let's detach the variables in data frame from the search path::
+
 	> detach(df)
+
+x and y are no more accessible directly:: 
+
 	> x
 	Error: object 'x' not found
 
 
-Updating the data frame through attached variables::
+If we update the data frame variables while they are attached in search path,
+this will not be reflected correctly.
+
+Let's attach our data frame::
 
 	> attach(df)
-	> df.x <- x +  y
-	> df
-	  x y
-	1 1 3
-	2 2 2
-	3 3 1
+
+Let's update the x variable::
+
 	> df$x <- x +  y
 	> df
 	  x y
 	1 4 3
 	2 4 2
 	3 4 1
+
+This doesn't reflect in the attached variables:: 
+
 	> x
 	[1] 1 2 3
 	> y
 	[1] 3 2 1
+
+Let's detach and re-attach the data frame::
+
 	> detach()
 	> attach(df)
+
+We can now see the updated variables::
+
 	> x
 	[1] 4 4 4
 	> y
 	[1] 3 2 1
 
+
+.. rubric:: rbind and cbind
+
+They work pretty much like the matrices.
+
+Let's create a data frame::
+
+	> df <- data.frame(x=c(1,2,3), y=c('a', 'b', 'c'))
+	> df
+	  x y
+	1 1 a
+	2 2 b
+	3 3 c
+
+Let's bind a new row::
+
+	> rbind(df, c(4, 'c'))
+	  x y
+	1 1 a
+	2 2 b
+	3 3 c
+	4 4 c
+
+
+Let's bind a new column::
+
+	> cbind(df, z=c(T, F, F))
+	  x y     z
+	1 1 a  TRUE
+	2 2 b FALSE
+	3 3 c FALSE
+
+
+There are some caveats though. Note that a variable with character values gets
+factored by default during the creation of a data frame. Thus, we can only 
+insert a factor level which is already there in the table in that column later.
+See for example::
+
+	> rbind(df, c(4, 'd'))
+	  x    y
+	1 1    a
+	2 2    b
+	3 3    c
+	4 4 <NA>
+	Warning message:
+	In `[<-.factor`(`*tmp*`, ri, value = "d") :
+	  invalid factor level, NA generated
+
+Viewing a data frame in RSutio::
+
+	> View(df)
+
+Describing a data set::
+
+	> df <- data.frame(x=c(1,2,3), y=c('a', 'b', 'c'))
+	> str(df)
+	'data.frame':	3 obs. of  2 variables:
+	 $ x: num  1 2 3
+	 $ y: Factor w/ 3 levels "a","b","c": 1 2 3
+	> df <- data.frame(x=1:40, y=(1:40)^2, z=(1:40)^3)
+	> str(df)
+	'data.frame':	40 obs. of  3 variables:
+	 $ x: int  1 2 3 4 5 6 7 8 9 10 ...
+	 $ y: num  1 4 9 16 25 36 49 64 81 100 ...
+	 $ z: num  1 8 27 64 125 216 343 512 729 1000 ...
+
+
+.. rubric:: Identifying columns with missing data
+
+Let us prepare a data frame with some columns having missing data::
+
+	> df <- data.frame(x=1:10, y=11:20, z=21:30, a=31:40, b=41:50)
+	> df$x[5] <- NA
+	> df$a[7] <- NA
+	> df
+	    x  y  z  a  b
+	1   1 11 21 31 41
+	2   2 12 22 32 42
+	3   3 13 23 33 43
+	4   4 14 24 34 44
+	5  NA 15 25 35 45
+	6   6 16 26 36 46
+	7   7 17 27 NA 47
+	8   8 18 28 38 48
+	9   9 19 29 39 49
+	10 10 20 30 40 50
+
+Compute the number of non-zero entries in each column::
+
+	> colSums(is.na(df))
+	x y z a b 
+	1 0 0 1 0 
+
+Identify columns with non-zero entries in above::
+
+	> colSums(is.na(df)) > 0
+	    x     y     z     a     b 
+	 TRUE FALSE FALSE  TRUE FALSE 
+
+Identify corresponding column names:: 
+
+	> colnames(df)[colSums(is.na(df)) > 0]
+	[1] "x" "a"
 
 
 Time Series

@@ -471,11 +471,20 @@ Let's increase and decrease counter values::
 Packages
 ----------------
 
-.. index:: library
+.. index:: library(), .libPaths(), search(), install.packages(), loadedNamespaces()
 
-List of installed packages::
+A library is a collection of packages. Libraries are local to an R installation.
+Typically, there is a global library with the R installation and a user specific library.
+
+List of library paths::
+
+	> .libPaths()
+	[1] "C:/Users/Shailesh/R/win-library/3.4" "C:/Program Files/R/R-3.4.2/library" 
+
+List of installed packages in all libraries::
 
 	> library()
+
 
 
 .. index:: package installation
@@ -487,6 +496,12 @@ Installing a package::
 Loading a package::
 
 	> library("geometry")
+
+
+Installing a package if it is not installed::
+
+	> if(!require(psych)){install.packages("psych")}
+
 
 List of currently installed packages::
 

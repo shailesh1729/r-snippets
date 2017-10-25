@@ -400,3 +400,15 @@ Computing mean all attributes of cars aggregated by their number of cylinders an
 	3 3.285714 3.500000
 	4 4.000000 1.500000
 	5 3.500000 2.500000
+
+
+Aggregation using formula :: 
+
+	> aggregate(mpg~cyl+vs, data=mtcars, FUN=mean)
+	  cyl vs      mpg
+	1   4  0 26.00000
+	2   6  0 20.56667
+	3   8  0 15.10000
+	4   4  1 26.73000
+	5   6  1 19.12500
+

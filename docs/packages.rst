@@ -69,9 +69,47 @@ day to day R development work.
 
     * - Package
       - Description
-      - See
+      - Remarks
+    * - boot
+      -
+      -
+    * - DescTools
+      -
+      -
+    * - foreach
+      -
+      - 
+    * - FSA
+      -
+      -
     * - iterators
       - Provides iterator functionality
       - 
-    * 
+    * - plyr
+      -
+      -
+    * - psych
+      -
+      -
+    * - rattle
+      -
+      - Requires GTK+ 
+    * - RColorBrewer
+      -
+      -
+    * - Rmisc
+      -
+      -
+    * - rpart
+      - Recursive partitioning and regression trees
+      - 
+    * - rpart.plot
+      - 
+      -
+    * - randomForest
+      -
+      -
+    * - party
+      - Conditional inference trees
+      - 
 

@@ -38,6 +38,7 @@ for specific tasks, you can refer to these notes.
    utils/index
    packages
    datasets/index
+   kaggle/index
 
 
 Indices and tables

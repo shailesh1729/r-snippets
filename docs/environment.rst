@@ -46,6 +46,11 @@ Clear a variable from workspace::
 	> rm(a)
 
 
+Clearing the console::
+
+	> cat("\014")
+
+
 Arithmetic
 ------------
 

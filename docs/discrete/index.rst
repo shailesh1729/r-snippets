@@ -6,3 +6,4 @@ Discrete Mathematics
    :maxdepth: 2
 
    comb
+   reference

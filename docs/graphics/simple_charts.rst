@@ -3,6 +3,12 @@ Simple Charts
 
 .. index:: charts
 
+This section focuses on functionality provided by the graphics package. 
+
+* We build a graph by one main command.
+* We follow it by a sequence of auxiliary commands to add more elements to the graphics.
+
+
 
 Plotting and charting functions support a set of commonly used parameters. 
 They are listed here for quick reference. You will see them being used
@@ -133,6 +139,29 @@ Pie Charts
 Scatter Plots
 --------------------------------
 
+Plotting age vs circumference from the Orange dataset::
+
+	> plot(age~circumference, data=Orange)
+
+.. image:: images/scatter-age-circumference-orange.png
+
+.. rubric:: Scatter Plot with Linear Model and Fitted Curve
+
+We can overlay a linear model fit on top of our scatter plot.
+
+Let us first create our scatter plot::
+
+	> plot(age~circumference, data=Orange)
+
+Let us now create a linear model between age and circumference and plot the fitted model:: 
+
+	> abline(lm(age~circumference, dat=Orange), col='blue')
+
+Finally, let us draw a smooth curve fitting the given data:: 
+
+	> lines(loess.smooth(Orange$circumference, Orange$age), col='red')
+
+.. image:: images/scatter-age-circumference-orange-lm-ablines.png
 
 Box Plots
 -----------------------------
@@ -288,11 +317,11 @@ Plotting the data::
 
 Closing the device to finish the export::
 
-	dev.off()
+	> dev.off()
+
 
 .. image:: images/plot_export_demo.png
 	:width: 600px
-
 
 
 

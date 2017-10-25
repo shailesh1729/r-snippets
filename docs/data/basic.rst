@@ -110,10 +110,11 @@ Reading a table and converting it to a matrix::
     [3,]  8  9 10 11
 
 
+.. rubric:: Functions for reading tabular data and their defaults
+
 
 .. list-table::
     :header-rows: 1
-    :caption: Functions for reading tabular data
 
     * - Function
       - Purpose
@@ -123,31 +124,65 @@ Reading a table and converting it to a matrix::
 
     * - ``read.table``
       - Read tabular data from file
-      - Absent by default
+      - Absent
       - 
       - .
 
     * - ``read.csv``
       - Read from comma separated value files
-      - Present by default
+      - Present
       - ,
       - .
 
     * - ``read.csv2``
       - Read from semicolon separated value files
-      - Present by default
+      - Present
       - ;
       - ,
 
     * - ``read.delim``
       - Read from tab delimited files
-      - Present by default
-      - \t
+      - Present
+      - \\t
       - .
 
     * - ``read.delim2``
       - Read from tab delimited files
-      - Present by default
-      - \t
+      - Present
+      - \\t
       - ,
+
+Suggestions
+
+* Use ``nrows=`` argument to read only a few rows first to ensure 
+  that all the options to the reading function have been provided correctly. 
+
+
+.. rubric:: Reading a table from a text string
+
+.. index:: textConnection
+
+Let the tabular data be stored in a character string text:: 
+
+  > my.data <- '
+  + x y z
+  + 1 2 3
+  + 2 2 3
+  + 3 2 4
+  + 4 2 1
+  + '
+
+Let's prepare a connection to the text string::
+
+  > con <- textConnection(my.data)
+
+
+Let us read the table from the text connection:: 
+
+  > read.table(con, header=T)
+    x y z
+  1 1 2 3
+  2 2 2 3
+  3 3 2 4
+  4 4 2 1
 

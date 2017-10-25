@@ -14,7 +14,12 @@ date time: as.POSIXct setValidity, validObject
 
 Data Manipulation
 ---------------------
+readLines, stdin(), stdout()
+
 transform
+
+stringsAsFactors=FALSE
+
 
 Probability Distributions
 -----------------------------
@@ -33,8 +38,48 @@ MAP estimation
 Bayesian estimation
 
 
+Curve fitting
+----------------------
+
+loess.smooth
+
+
+Graphics
+----------------------
+plot parameters: ann, type, col, lty, col.main, col.label, cex.main, cex.lab font.main, font.lab
+abline
+lines
+points
+rainbow
+pie
+boxplot
+split
+gl
+polygon
+box
+axis
+rect
+hist
+pairs
+diff
+range
+contour
+mtext
+coplot
+
+
+
+
 Tidyverse
 --------------
 ggplot2
 dplyer
+
+
+Decision Trees
+--------------------
+
+rpart
+rpart.control
+cp
 
