@@ -37,3 +37,5 @@ workspace
 docs/commands.R
 *.bat
 docs/_templates/notes.txt
+rsconnect
+*.nb.html

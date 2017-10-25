@@ -1,0 +1,258 @@
+---
+title: "Exploration of MPG Dataset"
+author: "Shailesh Kumar"
+output: html_notebook
+---
+
+This notebook explores the mpg dataset available in the ggplot2 package. 
+The goals of this notebook are:
+
+* General understanding of mpg dataset
+* Learning features of ggplot2 package
+
+```{r}
+require(ggplot2)
+```
+This dataset provides fuel economy data from 1999 and 2008 for 
+38 popular models of cars. The dataset is shipped with *ggplot2* package.
+
+| Variable | Type | Description | Details | 
+|----------|------|-------------|---------|
+| manufacturer | string | car manufacturer | 15 manufacturers |
+| model | string |model name | 38 models |
+| displ | numeric | engine displacement in liters| 1.6 - 7.0, median: 3.3 |
+| year | integer | year of manufacture | 1999, 2008 |
+| cyl |  | Number of cylinders | 4, 5, 6, 8 | 
+| trans| string | type of transmission | automatic, manual (many sub types) |
+| drv | string | drive type | f, r, 4, f=front wheel, r=rear wheel, 4=4 wheel|
+| cty | integer | city mileage | miles per gallon |
+| hwy | integer | highway mileage | miles per gallon |
+| fl | string | fuel type | 5 fuel types |
+| class | string | type of car | 7 types | 
+| |||
+
+Description of mpg dataset
+```{r}
+str(mpg)
+```
+
+Number of rows or observations or records
+```{r}
+nrow(mpg)
+```
+
+Number of columns or variables
+```{r}
+ncol(mpg)
+```
+
+Names of columns
+```{r}
+colnames(mpg)
+```
+
+### Manufacturers
+```{r}
+table(mpg$manufacturer)
+qplot(manufacturer, data=mpg, geom="bar")
+```
+
+### Year of manufacturing
+```{r}
+table(mpg$year)
+qplot(year, data=mpg, geom="bar")
+```
+
+
+### Displacement
+```{r}
+summary(mpg$displ)
+qplot(displ, data=mpg, geom="histogram", bins=30)
+boxplot(mpg$displ)
+```
+
+### Cylinders
+```{r}
+table(mpg$cyl)
+qplot(cyl, data=mpg, geom="bar")
+```
+
+### Transmission types
+```{r}
+table(mpg$trans)
+qplot(trans, data=mpg, geom="bar")
+```
+
+### Wheel drive types
+```{r}
+table(mpg$drv)
+qplot(trans, data=mpg, geom="bar")
+```
+
+### Mileage in city
+
+```{r}
+summary(mpg$cty)
+qplot(cty, data=mpg, geom="histogram", bins=20)
+qplot(cty, data=mpg, geom="histogram", bins=30)
+qplot(cty, data=mpg, geom="histogram", bins=40)
+```
+
+### Mileage in highways
+```{r}
+summary(mpg$hwy)
+qplot(hwy, data=mpg, geom="histogram", bins=20)
+qplot(hwy, data=mpg, geom="histogram", bins=30)
+qplot(hwy, data=mpg, geom="histogram", bins=40)
+```
+
+### Fuel types
+```{r}
+table(mpg$fl)
+qplot(fl, data=mpg, geom="bar")
+```
+
+### Vehicle Class
+```{r}
+table(mpg$class)
+qplot(class, data=mpg, geom="bar")
+```
+
+### Displacement vs highway efficiency
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))
+```
+
+The same graph can be built using qplot too
+```{r}
+qplot(displ, hwy, data=mpg, geom="point")
+```
+
+Looking at this data separately for each class
+```{r}
+qplot(displ, hwy, data=mpg, geom="point", color=class)
+```
+
+Fixing the color for all points
+```{r}
+qplot(displ, hwy, data=mpg, geom="point", color=I("blue"))
+```
+
+The same graphic through ggplot
+```{r}
+ggplot(data=mpg) + geom_point(mapping = aes(x = displ, y = hwy), color = "blue")
+```
+
+
+Separate graphs for each vehicle class
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_wrap(~ class, nrow = 2)
+```
+
+Creating facets on the basis of two variables : number of cylinders and
+type of drive
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(drv ~ cyl)
+```
+
+There are no cars for some combinations of drive and cylinders. 
+
+Creating facets vertically on drive:
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(drv ~ .)
+```
+
+Creating facets horizontally on cylinders:
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(. ~ cyl)
+```
+
+
+Estimating a smooth curve for the relationship between displacement and
+highway mileage:
+
+```{r}
+ggplot(data = mpg) + 
+  geom_smooth(mapping = aes(x = displ, y = hwy))
+```
+
+Separate curve for each type of drive:
+```{r}
+ggplot(data = mpg) + 
+  geom_smooth(mapping = aes(x = displ, y = hwy, linetype = drv))
+```
+
+Grouping data:
+```{r}
+ggplot(data = mpg) +
+  geom_smooth(mapping = aes(x = displ, y = hwy, group = drv))
+```
+
+Grouping data using specific color:
+
+```{r}
+ggplot(data = mpg) +
+  geom_smooth(
+    mapping = aes(x = displ, y = hwy, color = drv)
+  )
+```
+
+Hiding the legend:
+```{r}
+ggplot(data = mpg) +
+  geom_smooth(
+    mapping = aes(x = displ, y = hwy, color = drv),
+    show.legend = FALSE
+  )
+```
+
+Overlaying a smooth curve on top of scatter plot:
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point() +
+  geom_smooth()
+```
+
+Using a color based grouping for the scatter plot but a common
+curve overlayed on top of it:
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(color = class)) + 
+  geom_smooth()
+```
+
+Filtering data for a specific geom:
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(color = class)) + 
+  geom_smooth(data = dplyr::filter(mpg, class == "subcompact"), se = FALSE)
+```
+The se=FALSE setting removes the confidence interval around the
+estimated curve.
+
+Grouping data by drive and then drawing scatter plot with estimated curve
+for each group:
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) + 
+  geom_point() + 
+  geom_smooth(se = FALSE)
+```
+
+### Drive vs Cylinder
+
+Visualizing the combinations of drives and cylinders available in the dataset:
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(y = drv, x = cyl), size=4)
+```
+

@@ -1,0 +1,9 @@
+---
+title: "Exploration of Tooth Growth Dataset"
+author: "Shailesh Kumar"
+output: html_notebook
+---
+
+```{r}
+require(ggplot2)
+```

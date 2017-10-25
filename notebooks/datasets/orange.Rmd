@@ -1,0 +1,41 @@
+---
+title: "Exploration of Orange Dataset"
+author: "Shailesh Kumar"
+output: html_notebook
+---
+This data set contains records of growth of orange trees. 
+Growth is measured in terms of the circumference of a tree
+at a specific age.
+The data set contain records for 5 trees. 
+For each tree, there are 7 records for 7 different days on which
+circumference was measured.
+The age of a tree is measured in the number of days 
+since 1968/12/31. There are 7 specific days on which
+measurements have been taken: [118  484  664 1004 1231 1372 1582].
+
+```{r}
+require(ggplot2)
+```
+
+```{r}
+str(Orange)
+```
+
+A simple scatter plot: 
+
+```{r}
+qplot(age,circumference, data=Orange, geom="point")
+```
+
+Using different color for tracking the growth of each tree:
+
+```{r}
+qplot(data=Orange, x=age, y=circumference, geom="point", color=Tree)
+```
+
+Tracking the growth for each tree in separate line:
+
+```{r}
+qplot(data=Orange, x=age, y=circumference, geom="smooth", color=Tree, se=FALSE)
+```
+
