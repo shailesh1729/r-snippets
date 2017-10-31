@@ -1,7 +1,30 @@
 Date Time
 =======================
 
-Following options are available: 
+
+
+Current date and time::
+
+    > date()
+    [1] "Tue Oct 31 12:43:00 2017"
+
+This is a character object.
+
+Current date:: 
+
+    > Sys.Date()
+    [1] "2017-10-31"
+
+This is a Date object.
+
+Current time::
+
+    > Sys.time()
+    [1] "2017-10-31 12:44:11 IST"
+
+Current time is a POSIXct object.
+
+Following options are available in R for date time manipulation: 
 
 * Built-in ``as.Date`` function supports dates (but no time)
 * ``chron`` library supports date and time but no time-zones

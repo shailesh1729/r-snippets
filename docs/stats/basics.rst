@@ -79,8 +79,8 @@ obtained simultaneously::
 	 3rd Qu.:18.90   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:4.000   3rd Qu.:4.000  
 	 Max.   :22.90   Max.   :1.0000   Max.   :1.0000   Max.   :5.000   Max.   :8.000  
 
-.. rubric:: Variance
-.. index:: variance, var
+.. rubric:: Variance, Covariance
+.. index:: variance, var, cov, covariance
 
 Computing the sample variance::
 
@@ -102,6 +102,44 @@ Verifying the variance and mean square value relationship::
 	[1] 35.18897
 
 
+Computing the variance of each variable in a data frame::
+
+	> round(sapply(mtcars, var), digits=2)
+	     mpg      cyl     disp       hp     drat       wt     qsec       vs       am     gear     carb 
+	   36.32     3.19 15360.80  4700.87     0.29     0.96     3.19     0.25     0.25     0.54     2.61 
+
+
+Variances of selected columns::
+
+	> sapply(mtcars[, c('cyl', 'disp', 'wt')], var)
+	         cyl         disp           wt 
+	    3.189516 15360.799829     0.957379 
+
+Computing the covariance matrix for all variables in a data frame::
+
+	> round(cov(mtcars), digits=2)
+	         mpg    cyl     disp      hp   drat     wt   qsec     vs     am   gear  carb
+	mpg    36.32  -9.17  -633.10 -320.73   2.20  -5.12   4.51   2.02   1.80   2.14 -5.36
+	cyl    -9.17   3.19   199.66  101.93  -0.67   1.37  -1.89  -0.73  -0.47  -0.65  1.52
+	disp -633.10 199.66 15360.80 6721.16 -47.06 107.68 -96.05 -44.38 -36.56 -50.80 79.07
+	hp   -320.73 101.93  6721.16 4700.87 -16.45  44.19 -86.77 -24.99  -8.32  -6.36 83.04
+	drat    2.20  -0.67   -47.06  -16.45   0.29  -0.37   0.09   0.12   0.19   0.28 -0.08
+	wt     -5.12   1.37   107.68   44.19  -0.37   0.96  -0.31  -0.27  -0.34  -0.42  0.68
+	qsec    4.51  -1.89   -96.05  -86.77   0.09  -0.31   3.19   0.67  -0.20  -0.28 -1.89
+	vs      2.02  -0.73   -44.38  -24.99   0.12  -0.27   0.67   0.25   0.04   0.08 -0.46
+	am      1.80  -0.47   -36.56   -8.32   0.19  -0.34  -0.20   0.04   0.25   0.29  0.05
+	gear    2.14  -0.65   -50.80   -6.36   0.28  -0.42  -0.28   0.08   0.29   0.54  0.33
+	carb   -5.36   1.52    79.07   83.04  -0.08   0.68  -1.89  -0.46   0.05   0.33  2.61
+
+
+
+Computing the covariance matrix of selected variables::
+
+	> cov(mtcars[, c('cyl', 'disp', 'wt')])
+	            cyl       disp         wt
+	cyl    3.189516   199.6603   1.367371
+	disp 199.660282 15360.7998 107.684204
+	wt     1.367371   107.6842   0.957379
 
 
 .. index:: sd, standard deviation
@@ -113,7 +151,64 @@ Computing the standard deviation::
 	[1] 6.026948
 
 
+Standard deviation of each variable in a data frame::
 
+	> sapply(mtcars, sd)
+	        mpg         cyl        disp          hp        drat          wt        qsec          vs 
+	  6.0269481   1.7859216 123.9386938  68.5628685   0.5346787   0.9784574   1.7869432   0.5040161 
+	         am        gear        carb 
+	  0.4989909   0.7378041   1.6152000 
+
+
+.. rubric:: Pearson Correlation
+
+.. index:: cor, pearson correlation
+
+Pearson correlation coefficients are useful in estimating dependence between different variables.
+The value varies from 0 to 1. This corresponds between no correlation to complete correlation.
+
+.. list-table::
+    :header-rows: 1
+
+    * - Pearson coefficient 
+      - Interpretation
+    * - 0.00 - 0.19
+      - very weak correlation
+    * - 0.20 - 0.39
+      - weak correlation
+    * - 0.40 - 0.59
+      - moderate correlation
+    * - 0.60 - 0.79
+      - strong correlation
+    * - 0.80 - 1.00
+      - very strong correlation
+
+
+
+
+Computing Pearson correlation coefficients for all variables in a data frame::
+
+	> round(cor(mtcars), digits=2)
+	       mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+	mpg   1.00 -0.85 -0.85 -0.78  0.68 -0.87  0.42  0.66  0.60  0.48 -0.55
+	cyl  -0.85  1.00  0.90  0.83 -0.70  0.78 -0.59 -0.81 -0.52 -0.49  0.53
+	disp -0.85  0.90  1.00  0.79 -0.71  0.89 -0.43 -0.71 -0.59 -0.56  0.39
+	hp   -0.78  0.83  0.79  1.00 -0.45  0.66 -0.71 -0.72 -0.24 -0.13  0.75
+	drat  0.68 -0.70 -0.71 -0.45  1.00 -0.71  0.09  0.44  0.71  0.70 -0.09
+	wt   -0.87  0.78  0.89  0.66 -0.71  1.00 -0.17 -0.55 -0.69 -0.58  0.43
+	qsec  0.42 -0.59 -0.43 -0.71  0.09 -0.17  1.00  0.74 -0.23 -0.21 -0.66
+	vs    0.66 -0.81 -0.71 -0.72  0.44 -0.55  0.74  1.00  0.17  0.21 -0.57
+	am    0.60 -0.52 -0.59 -0.24  0.71 -0.69 -0.23  0.17  1.00  0.79  0.06
+	gear  0.48 -0.49 -0.56 -0.13  0.70 -0.58 -0.21  0.21  0.79  1.00  0.27
+	carb -0.55  0.53  0.39  0.75 -0.09  0.43 -0.66 -0.57  0.06  0.27  1.00
+
+Computing Pearson correlation coefficients for selected variables::
+
+	> cor(mtcars[, c('cyl', 'disp', 'wt')])
+	           cyl      disp        wt
+	cyl  1.0000000 0.9020329 0.7824958
+	disp 0.9020329 1.0000000 0.8879799
+	wt   0.7824958 0.8879799 1.0000000
 
 .. rubric:: Tukey Five Number Summary
 
@@ -208,6 +303,8 @@ Let us now scale it to zero mean unit variance::
 	[1,]    1
 
 
+
+
 Group wise statistics
 '''''''''''''''''''''''''''''''
 
@@ -285,6 +382,49 @@ Looking at the tabulation in proportional terms::
 
 
 .. rubric:: Building a two-dimensional frequency table
+
+.. index:: two dimensional frequency table, contingency table
+
+Here is a simple example. We will extract the fuel type and vehicle class from
+the mpg data set and tabulate the co-occurrence of  pairs of these two
+variables::
+
+	> table(mpg[, c('fl', 'class')])
+	   class
+	fl  2seater compact midsize minivan pickup subcompact suv
+	  c       0       0       0       0      0          1   0
+	  d       0       1       0       0      0          2   2
+	  e       0       0       0       1      3          0   4
+	  p       5      21      15       0      0          3   8
+	  r       0      25      26      10     30         29  48
+
+
+Let's convert this table into a simple data frame::
+
+	> df <- as.data.frame(table(mpg[, c('fl', 'class')]))
+	> df[df$Freq != 0,]
+	   fl      class Freq
+	4   p    2seater    5
+	7   d    compact    1
+	9   p    compact   21
+	10  r    compact   25
+	14  p    midsize   15
+	15  r    midsize   26
+	18  e    minivan    1
+	20  r    minivan   10
+	23  e     pickup    3
+	25  r     pickup   30
+	26  c subcompact    1
+	27  d subcompact    2
+	29  p subcompact    3
+	30  r subcompact   29
+	32  d        suv    2
+	33  e        suv    4
+	34  p        suv    8
+	35  r        suv   48
+
+Note that only 18 of the rows (or combinations of fuel type and vehicle class)
+have non-zero entries. 
 
 US states income data::
 

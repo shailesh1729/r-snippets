@@ -442,6 +442,19 @@ Creating a matrix by specifying columns::
 	[3,]    3    7   11
 	[4,]    4    8   12
 
+.. index:: nrow, ncol, dim
+
+Matrix dimensions::
+
+	> m <- matrix(1:6, nrow=2)
+	> nrow(m)
+	[1] 2
+	> ncol(m)
+	[1] 3
+	> dim(m)
+	[1] 4 3
+
+
 .. index:: accessing; matrix
 
 Accessing an element::
@@ -473,6 +486,8 @@ Accessing a sub-matrix (1st 2 rows, last 2 columns)::
 	     [,1] [,2]
 	[1,]    5    9
 	[2,]    6   10
+
+
 
 .. index:: sum, rowSums, colSums
 
@@ -512,18 +527,24 @@ Mean over each column::
 	[1]  2.5  6.5 10.5
 
 
-.. index:: nrow, ncol, dim
 
-Matrix dimensions::
+.. index:: scale; matrix
 
-	> m <- matrix(1:6, nrow=2)
-	> nrow(m)
-	[1] 2
-	> ncol(m)
-	[1] 3
-	> dim(m)
-	[1] 4 3
+Subtracting the mean from each column of a matrix:: 
 
+	> A <- matrix(c(3, 2, -1, 2, -2, .5, -1, 4, -1), nrow=3)
+	> colMeans(A)
+	[1] 1.3333333 0.1666667 0.6666667
+	> B <- scale(A, scale=F)
+	> round(colMeans(B), digits=2)
+	[1] 0 0 0
+	> round(B, digits=2)
+	      [,1]  [,2]  [,3]
+	[1,]  1.67  1.83 -1.67
+	[2,]  0.67 -2.17  3.33
+	[3,] -2.33  0.33 -1.67
+	attr(,"scaled:center")
+	[1] 1.3333333 0.1666667 0.6666667
 
 .. index:: cbind
 
@@ -647,6 +668,130 @@ Transpose of a matrix::
 	[1,]    1    2
 	[2,]    3    4
 	[3,]    5    6
+
+
+.. index:: element wise operations; matrix
+
+Addition and subtraction :: 
+
+	> A <- matrix(c(1:12), nrow=3)
+	> A
+	     [,1] [,2] [,3] [,4]
+	[1,]    1    4    7   10
+	[2,]    2    5    8   11
+	[3,]    3    6    9   12
+	> A + A
+	     [,1] [,2] [,3] [,4]
+	[1,]    2    8   14   20
+	[2,]    4   10   16   22
+	[3,]    6   12   18   24
+	> A - A
+	     [,1] [,2] [,3] [,4]
+	[1,]    0    0    0    0
+	[2,]    0    0    0    0
+	[3,]    0    0    0    0
+
+Element wise multiplication and division::
+
+	> A * A
+	     [,1] [,2] [,3] [,4]
+	[1,]    1   16   49  100
+	[2,]    4   25   64  121
+	[3,]    9   36   81  144
+	> A / A
+	     [,1] [,2] [,3] [,4]
+	[1,]    1    1    1    1
+	[2,]    1    1    1    1
+	[3,]    1    1    1    1
+
+
+Element wise power operation::
+
+	> A^3
+	     [,1] [,2] [,3] [,4]
+	[1,]    1   64  343 1000
+	[2,]    8  125  512 1331
+	[3,]   27  216  729 1728
+	> A^(0.5)
+	         [,1]     [,2]     [,3]     [,4]
+	[1,] 1.000000 2.000000 2.645751 3.162278
+	[2,] 1.414214 2.236068 2.828427 3.316625
+	[3,] 1.732051 2.449490 3.000000 3.464102
+
+
+Row wise addition, subtraction, multiplication, division::
+
+	> v <- c(2,1,4)
+	> A + v
+	     [,1] [,2] [,3] [,4]
+	[1,]    3    6    9   12
+	[2,]    3    6    9   12
+	[3,]    7   10   13   16
+	> A - v
+	     [,1] [,2] [,3] [,4]
+	[1,]   -1    2    5    8
+	[2,]    1    4    7   10
+	[3,]   -1    2    5    8
+	> A * v
+	     [,1] [,2] [,3] [,4]
+	[1,]    2    8   14   20
+	[2,]    2    5    8   11
+	[3,]   12   24   36   48
+	> A / v
+	     [,1] [,2] [,3] [,4]
+	[1,] 0.50  2.0 3.50    5
+	[2,] 2.00  5.0 8.00   11
+	[3,] 0.75  1.5 2.25    3
+
+
+Column wise addition, subtraction, multiplication, division::
+
+	> v <- c(2, 3, 1, 4)
+	> t(t(A) + v)
+	     [,1] [,2] [,3] [,4]
+	[1,]    3    7    8   14
+	[2,]    4    8    9   15
+	[3,]    5    9   10   16
+	> t(t(A) - v)
+	     [,1] [,2] [,3] [,4]
+	[1,]   -1    1    6    6
+	[2,]    0    2    7    7
+	[3,]    1    3    8    8
+	> t(t(A) * v)
+	     [,1] [,2] [,3] [,4]
+	[1,]    2   12    7   40
+	[2,]    4   15    8   44
+	[3,]    6   18    9   48
+	> t(t(A) / v)
+	     [,1]     [,2] [,3] [,4]
+	[1,]  0.5 1.333333    7 2.50
+	[2,]  1.0 1.666667    8 2.75
+	[3,]  1.5 2.000000    9 3.00
+
+Another way::
+
+	> A + rep(v, each=3)
+	     [,1] [,2] [,3] [,4]
+	[1,]    3    7    8   14
+	[2,]    4    8    9   15
+	[3,]    5    9   10   16
+	> A - rep(v, each=3)
+	     [,1] [,2] [,3] [,4]
+	[1,]   -1    1    6    6
+	[2,]    0    2    7    7
+	[3,]    1    3    8    8
+	> A * rep(v, each=3)
+	     [,1] [,2] [,3] [,4]
+	[1,]    2   12    7   40
+	[2,]    4   15    8   44
+	[3,]    6   18    9   48
+	> A / rep(v, each=3)
+	     [,1]     [,2] [,3] [,4]
+	[1,]  0.5 1.333333    7 2.50
+	[2,]  1.0 1.666667    8 2.75
+	[3,]  1.5 2.000000    9 3.00
+
+
 
 .. index:: matrix multiplication, %*%
 

@@ -27,15 +27,16 @@ for specific tasks, you can refer to these notes.
    io
    text_processing
    data/index
-   linear_algebra
+   la/index
    discrete/index
    prob/index
    stats/index
    graphics/index
    optimization/index
-   regression
    models/index
+   cluster/index
    utils/index
+   oo/index
    packages
    datasets/index
    kaggle/index

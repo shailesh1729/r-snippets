@@ -22,6 +22,12 @@ The standard R distribution comes with following packages.
     * - datasets
       - Base R datasets
 
+    * - dlm
+      - Maximum likelihood and Bayesian dynamic linear models
+
+    * - fftw
+      -  Fast Fourier Transform 
+
     * - grDevices
       - Graphics devices for base and grid graphics
 
@@ -37,8 +43,14 @@ The standard R distribution comes with following packages.
     * - parallel
       - Support for parallel computation, including by forking and by sockets, and random-number generation
 
+    * - rattle
+      - R Analytic Tool To Learn Easily (Rattle) provides a Gnome (RGtk2) based interface to R functionality for data science
+      
     * - splines
       - Regression spline functions and classes
+
+    * - signal
+      - Signal Processing [ported from Octave]
 
     * - stats
       - R statistical functions
@@ -54,6 +66,19 @@ The standard R distribution comes with following packages.
 
     * - utils
       - R utility functions
+
+    * - waved
+      - Deconvolution of noisy signals using wavelet methods
+
+    * - wavelets
+      - Wavelet filters, transforms, multi-resolution analysis
+
+    * - waveslim
+      - 1, 2, 3 dimensional signal processing with wavelets, book: introduction to wavelets and other filtering methods in finance and economics
+
+    * - wavethresh
+      - Book: Wavelet methods in statistics with R 
+
 
 
 
@@ -112,4 +137,7 @@ day to day R development work.
     * - party
       - Conditional inference trees
       - 
+    * - ggpubr
+      - publication ready plots based on ggplot2
+      -
 
