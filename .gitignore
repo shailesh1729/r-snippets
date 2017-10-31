@@ -39,3 +39,6 @@ docs/commands.R
 docs/_templates/notes.txt
 rsconnect
 *.nb.html
+.Rproj.user
+.Rbuildignore
+*.Rproj
