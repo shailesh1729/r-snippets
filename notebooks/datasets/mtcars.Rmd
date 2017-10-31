@@ -1,7 +1,9 @@
 ---
 title: "Exploration of MTCARS Dataset"
 author: "Shailesh Kumar"
-output: html_notebook
+output: 
+  html_notebook:
+    toc: true
 ---
 
 ```{r}

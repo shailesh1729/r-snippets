@@ -1,0 +1,141 @@
+---
+title: "Activation Functions"
+author: "Shailesh Kumar"
+output: 
+  html_notebook:
+    toc: true
+    number_sections: true
+---
+
+This notebook contains descriptions of several activation functions.
+
+
+Necessary packages
+```{r}
+require(ggplot2)
+```
+
+# Identity Function
+
+```{r}
+f <- function(x) {x}
+ggplot(data.frame(x=c(-4, 4)), mapping=aes(x=x)) + 
+  geom_hline(yintercept=0, color='red') +
+  geom_vline(xintercept=0, color='red') +
+  stat_function(fun=f, colour = "dodgerblue3") +
+  ggtitle('Identity') +
+  scale_x_continuous(name='x') +
+  scale_y_continuous(name='f(x)') +
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+Let's create a reusable function for plotting the activation functions going
+forward:
+```{r}
+plot_activation_function <- function(f, title, range){
+  start <- range[1]
+  end <- range[2]
+  ggplot(data.frame(x=range), mapping=aes(x=x)) + 
+    geom_hline(yintercept=0, color='red', alpha=1/4) +
+    geom_vline(xintercept=0, color='red', alpha=1/4) +
+    stat_function(fun=f, colour = "dodgerblue3") +
+    ggtitle(title) +
+    scale_x_continuous(name='x') +
+    scale_y_continuous(name='f(x)') +
+    theme(plot.title = element_text(hjust = 0.5))
+}
+```
+
+# Binary Step Function
+```{r}
+f <- function(x){
+  ifelse(x >= 0, 1, 0)
+}
+plot_activation_function(f, 'Binary step', c(-4,4))
+```
+
+
+# Logistic Function
+```{r}
+f <- function(x){1 / (1 + exp(-x))}
+plot_activation_function(f, 'Logistic', c(-4,4))
+```
+
+# Tan H Function
+
+```{r}
+tanh_func <- function(x){tanh(x)}
+plot_activation_function(tanh_func, 'TanH', c(-4,4))
+```
+
+# Arc Tan Function
+
+```{r}
+arc_tan_func <- function(x){atan(x)}
+plot_activation_function(arc_tan_func, 'ArcTan', c(-4,4))
+```
+
+# Soft Sign Function
+```{r}
+soft_sign_func <- function(x){ x / (1 + abs(x))  }
+plot_activation_function(soft_sign_func, 'Softsign', c(-4,4))
+```
+
+
+# Rectified Linear Unit Function
+```{r}
+rec_lu_func <- function(x){ ifelse(x < 0 , 0, x )}
+plot_activation_function(rec_lu_func, 'RecLU', c(-4,4))
+```
+
+# Leaky Rectified Linear Unit Function
+```{r}
+leaky_rec_lu_func <- function(x){ ifelse(x < 0 , 0.01 *x , x )}
+plot_activation_function(leaky_rec_lu_func, 'Leaky RecLU', c(-8,8))
+```
+
+# Soft Plus Function
+```{r}
+soft_plus_func <- function(x){ log(1 + exp(x))}
+plot_activation_function(soft_plus_func, 'SoftPlus', c(-8,8))
+```
+
+# Bent Identity Function
+```{r}
+bent_identity_func <- function(x){  (sqrt(x^2 + 1) - 1)/2 + x  }
+plot_activation_function(bent_identity_func, 'Bent Identity', c(-8,8))
+```
+
+# Sinusoid Function
+```{r}
+plot_activation_function(sin, 'sin(x)', c(-8,8))
+```
+
+# Sinc Function
+```{r}
+sinc_function<- function(x){ifelse(x == 0, 1, sin(x) / x)}
+plot_activation_function(sinc_function, 'Sinc', c(-8,8))
+```
+
+
+# Gaussian Function
+```{r}
+gaussian_function<- function(x){exp(-x^2)}
+plot_activation_function(gaussian_function, 'Gaussian', c(-4,4))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

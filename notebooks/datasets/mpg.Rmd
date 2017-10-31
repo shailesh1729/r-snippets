@@ -1,7 +1,9 @@
 ---
 title: "Exploration of MPG Dataset"
 author: "Shailesh Kumar"
-output: html_notebook
+output: 
+  html_notebook:
+    toc: true
 ---
 
 This notebook explores the mpg dataset available in the ggplot2 package. 
@@ -21,14 +23,14 @@ This dataset provides fuel economy data from 1999 and 2008 for
 | manufacturer | string | car manufacturer | 15 manufacturers |
 | model | string |model name | 38 models |
 | displ | numeric | engine displacement in liters| 1.6 - 7.0, median: 3.3 |
-| year | integer | year of manufacture | 1999, 2008 |
-| cyl |  | Number of cylinders | 4, 5, 6, 8 | 
+| year | integer | year of manufacturing | 1999, 2008 |
+| cyl |  | number of cylinders | 4, 5, 6, 8 | 
 | trans| string | type of transmission | automatic, manual (many sub types) |
 | drv | string | drive type | f, r, 4, f=front wheel, r=rear wheel, 4=4 wheel|
 | cty | integer | city mileage | miles per gallon |
 | hwy | integer | highway mileage | miles per gallon |
-| fl | string | fuel type | 5 fuel types |
-| class | string | type of car | 7 types | 
+| fl | string | fuel type | 5 fuel types (diesel, petrol, electric, etc.) |
+| class | string | vehicle class | 7 types (compact, SUV, minivan etc.) | 
 | |||
 
 Description of mpg dataset
@@ -54,13 +56,13 @@ colnames(mpg)
 ### Manufacturers
 ```{r}
 table(mpg$manufacturer)
-qplot(manufacturer, data=mpg, geom="bar")
+qplot(manufacturer, data=mpg, geom="bar", fill=manufacturer)
 ```
 
 ### Year of manufacturing
 ```{r}
 table(mpg$year)
-qplot(year, data=mpg, geom="bar")
+qplot(factor(year), data=mpg, geom="bar", fill=factor(year))
 ```
 
 
@@ -74,19 +76,19 @@ boxplot(mpg$displ)
 ### Cylinders
 ```{r}
 table(mpg$cyl)
-qplot(cyl, data=mpg, geom="bar")
+qplot(cyl, data=mpg, geom="bar", fill=factor(cyl))
 ```
 
 ### Transmission types
 ```{r}
 table(mpg$trans)
-qplot(trans, data=mpg, geom="bar")
+qplot(trans, data=mpg, geom="bar", fill=factor(trans))
 ```
 
 ### Wheel drive types
 ```{r}
 table(mpg$drv)
-qplot(trans, data=mpg, geom="bar")
+qplot(drv, data=mpg, geom="bar", fill=drv)
 ```
 
 ### Mileage in city
@@ -109,24 +111,24 @@ qplot(hwy, data=mpg, geom="histogram", bins=40)
 ### Fuel types
 ```{r}
 table(mpg$fl)
-qplot(fl, data=mpg, geom="bar")
+qplot(fl, data=mpg, geom="bar", fill=fl)
 ```
 
 ### Vehicle Class
 ```{r}
 table(mpg$class)
-qplot(class, data=mpg, geom="bar")
+qplot(class, data=mpg, geom="bar", fill=class)
 ```
 
 ### Displacement vs highway efficiency
 ```{r}
 ggplot(data = mpg) + 
-  geom_point(mapping = aes(x = displ, y = hwy))
+  geom_point(mapping = aes(x = displ, y = hwy), color='blue')
 ```
 
 The same graph can be built using qplot too
 ```{r}
-qplot(displ, hwy, data=mpg, geom="point")
+qplot(displ, hwy, data=mpg, geom="point", color='red')
 ```
 
 Looking at this data separately for each class
@@ -145,10 +147,10 @@ ggplot(data=mpg) + geom_point(mapping = aes(x = displ, y = hwy), color = "blue")
 ```
 
 
-Separate graphs for each vehicle class
+Separate graphs for each vehicle class:
 ```{r}
 ggplot(data = mpg) + 
-  geom_point(mapping = aes(x = displ, y = hwy)) +
+  geom_point(mapping = aes(x = displ, y = hwy, color=class)) +
   facet_wrap(~ class, nrow = 2)
 ```
 
@@ -156,7 +158,7 @@ Creating facets on the basis of two variables : number of cylinders and
 type of drive
 ```{r}
 ggplot(data = mpg) + 
-  geom_point(mapping = aes(x = displ, y = hwy)) +
+  geom_point(mapping = aes(x = displ, y = hwy, color=drv)) +
   facet_grid(drv ~ cyl)
 ```
 
@@ -165,14 +167,14 @@ There are no cars for some combinations of drive and cylinders.
 Creating facets vertically on drive:
 ```{r}
 ggplot(data = mpg) + 
-  geom_point(mapping = aes(x = displ, y = hwy)) +
+  geom_point(mapping = aes(x = displ, y = hwy, color=drv)) +
   facet_grid(drv ~ .)
 ```
 
 Creating facets horizontally on cylinders:
 ```{r}
 ggplot(data = mpg) + 
-  geom_point(mapping = aes(x = displ, y = hwy)) +
+  geom_point(mapping = aes(x = displ, y = hwy, color=cyl)) +
   facet_grid(. ~ cyl)
 ```
 
@@ -188,7 +190,7 @@ ggplot(data = mpg) +
 Separate curve for each type of drive:
 ```{r}
 ggplot(data = mpg) + 
-  geom_smooth(mapping = aes(x = displ, y = hwy, linetype = drv))
+  geom_smooth(mapping = aes(x = displ, y = hwy, linetype = drv, color=drv))
 ```
 
 Grouping data:
@@ -253,6 +255,60 @@ Visualizing the combinations of drives and cylinders available in the dataset:
 
 ```{r}
 ggplot(data = mpg) + 
-  geom_point(mapping = aes(y = drv, x = cyl), size=4)
+  geom_point(mapping = aes(y = drv, x = cyl, color=factor(cyl)), size=4)
 ```
+
+### Is automatic transmission better? 
+
+We will create a copy of our data frame
+```{r}
+mpg2 <- mpg
+```
+
+We will introduce a new column defining whether the car
+is automatic or manual
+```{r}
+mpg2$is.automatic <- startsWith(mpg2$trans, 'auto')
+mpg2$transmission <- ifelse(mpg2$is.automatic, 'auto', 'man')
+```
+Let's verify the statistics
+```{r}
+table(mpg2$trans)
+table(mpg2$is.automatic)
+```
+
+
+Let's compare the box plots of city mileage for the two types
+```{r}
+qplot(transmission, cty, data=mpg2, geom='boxplot', fill=transmission, color=transmission)
+```
+This graphic suggests that the manual transmission is better
+than automatic one.
+
+It is time for us to perform a t-test to verify the accuracy.
+```{r}
+manual.cty <- mpg2$cty[!mpg2$is.automatic]
+auto.cty <- mpg2$cty[mpg2$is.automatic]
+t.test(manual.cty, auto.cty, alternative = "two.sided", var.equal = FALSE)
+```
+
+The p-value is very low.  It indicates strong evidence against the null hypothesis, so we reject the null hypothesis and accept that
+means are not equal.
+
+Let's also verify the hypothesis that mean of manual is
+greater than mean of automatic transmission.
+
+```{r}
+t.test(manual.cty, auto.cty, alternative = "greater", var.equal = FALSE)
+```
+Again we see that p-value is very very small. Thus, the
+alternate hypothesis must be true. Mean of manual
+transmission is greater than mean of automatic transmission.
+
+```{r}
+t.test(manual.cty, auto.cty, alternative = "less", var.equal = FALSE)
+```
+
+Here p-value is 1. We don't have any evidence supporting the
+alternate hypothesis.
 

@@ -1,0 +1,62 @@
+---
+title: "Exploration of Movies Dataset"
+author: "Shailesh Kumar"
+output: 
+  html_notebook:
+    toc: true
+---
+
+```{r}
+require(ggplot2)
+require(ggplot2movies)
+```
+```{r}
+head(movies)
+```
+
+The movie genres are stored as Boolean flag columns in this dataset.
+This is useful since one movie may fall into multiple genres. 
+
+Let's prepare a simpler data set consisting of movie budget, year 
+and the short flag 
+in which there is a separate column
+called genre. Since one movie may fall into multiple genres,
+our dataset may have repeated entries for same movie.
+This is slightly involved.
+```{r}
+my.columns <- c('budget', 'year', 'Short')
+action.movies <- movies[movies$Action == 1, my.columns]
+action.movies$type <- 'action'
+animation.movies <- movies[movies$Animation == 1, my.columns]
+animation.movies$type <- 'animation'
+comedy.movies <- movies[movies$Comedy == 1, my.columns]
+comedy.movies$type <- 'comedy'
+drama.movies <- movies[movies$Drama == 1, my.columns]
+drama.movies$type <- 'drama'
+documentary.movies <- movies[movies$Documentary == 1, my.columns]
+documentary.movies$type <- 'documentary'
+romance.movies <- movies[movies$Romance == 1, my.columns]
+romance.movies$type <- 'romance'
+movie.budgets <- rbind(action.movies, animation.movies, comedy.movies,
+      drama.movies, documentary.movies, romance.movies)
+names(movie.budgets) <- c('budget', 'year', 'short', 'type')
+head(movie.budgets)
+```
+
+Budget information is missing for most movies
+```{r}
+table(is.na(movie.budgets$budget))
+```
+
+Let's see the distribution of movie genres:
+```{r}
+qplot(type, data=movie.budgets, geom='bar', fill=type)
+```
+
+Let's see the breakup of movies by their genre between short and long ones:
+```{r}
+qplot(type, data=movie.budgets, geom='bar', fill=factor(short))
+```
+
+Animation movies are usually short it appears. 
+

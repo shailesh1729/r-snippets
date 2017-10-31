@@ -1,0 +1,246 @@
+---
+title: "Exploration of Air Quality Dataset"
+author: "Shailesh Kumar"
+output: 
+  html_notebook:
+    toc: true
+    number_sections: true
+---
+This data set has daily air quality measurements in New York from
+May to September 1973 over a period of 5 months. 
+
+| Variable | Type | Unit | Description | Detail |
+|----------|------|------|-------------|--------|
+| Ozone | numeric | parts per billion | mean Ozone concentration |  Roosevelt island |
+| Solar.R | numeric |  | Solar radiaion | central park | 
+| Wind | numeric | miles per hour | average wind speed | LaGuardia airport |
+| Temp |numeric | Fahrenheit | maximum daily temperature | LaGuardia airport |
+| Month | numeric |  | Month of observation | 5 values |
+| Day |  numeric |  | day of month | 153 days total |
+|  | | | | |
+
+
+Necessary packages
+```{r}
+require(ggplot2)
+require(moments)
+```
+Let's make a copy of the dataset for the 
+following analysis. 
+```{r}
+aq <- data.frame(airquality)
+```
+
+
+Names of columns
+```{r}
+colnames(aq)
+```
+
+
+Let's look at some of the rows:
+
+```{r}
+head(aq)
+```
+
+Several entries are not available. Let's summarize:
+
+```{r}
+colSums(is.na(aq))
+```
+
+
+Day should be a factor variable
+```{r}
+aq$Day <- factor(aq$Day, levels=c(1:31), ordered=TRUE)
+```
+Month should be a factor variable
+```{r}
+aq$Month <- factor(aq$Month, levels=5:9, labels=month.abb[5:9], ordered=TRUE)
+```
+
+
+Summary statistiscs for all the variables:
+```{r}
+summary(aq)
+```
+
+# Variables
+
+## Ozone
+
+```{r}
+summary(aq$Ozone)
+```
+
+Histogram
+```{r}
+ggplot(data=aq) + geom_histogram(mapping=aes(Ozone))
+```
+
+The histogram appears assymetric. 
+
+
+We can check the normalcy of the distribution by measuring its 
+skewness and kurtosis
+
+```{r}
+skewness(aq$Ozone, na.rm = T)
+```
+The data is skewed heavily towards right.
+
+Let's also measure kurtosis:
+```{r}
+kurtosis(aq$Ozone, na.rm=T)
+```
+This is *leptokurtic*.
+
+Let's apply a transformation to see if the histogram becomes more symmetric:
+
+
+```{r}
+aq$Ozone.sqrt <- sqrt(aq$Ozone)
+ggplot(data=aq) + geom_histogram(mapping=aes(Ozone.sqrt))
+```
+We have stored the square root of Ozone concentration values in 
+the aq dataframe itself as a new column.
+This is indeed more symmetric and looking like normal distribution.
+
+Let's verify the skewness:
+```{r}
+skewness(aq$Ozone.sqrt, na.rm=T)
+```
+Also the kurtosis:
+```{r}
+kurtosis(aq$Ozone.sqrt, na.rm=T)
+```
+
+There is indeed improvement in skewness.
+
+Seasonal variation in data:
+```{r}
+qplot(Month, Ozone, data=aq, geom="boxplot", color=Month)
+```
+
+
+## Solar.R
+
+```{r}
+summary(aq$Solar.R)
+```
+
+Histogram
+```{r}
+ggplot(data=aq) + geom_histogram(mapping=aes(Solar.R))
+```
+
+Seasonal variation in data:
+```{r}
+qplot(Month, Solar.R, data=aq, geom="boxplot", color=Month)
+```
+
+## Wind
+
+```{r}
+summary(aq$Wind)
+```
+
+
+Histogram
+```{r}
+ggplot(data=aq) + geom_histogram(mapping=aes(Wind))
+```
+
+Let's verify the normalcy of the distribution
+```{r}
+skewness(aq$Wind)
+kurtosis(aq$Wind)
+```
+This is very close to a normal distribution.
+
+Seasonal variation in data:
+```{r}
+qplot(Month, Wind, data=aq, geom="boxplot", color=Month)
+```
+
+## Temp
+
+```{r}
+summary(aq$Temp)
+```
+
+Seasonal variation in data:
+```{r}
+qplot(Month, Temp, data=aq, geom="boxplot", color=Month)
+```
+
+## Month
+
+```{r}
+table(aq$Month)
+```
+
+This just reflects the number of days in each month from May to September. 
+
+## Day
+
+```{r}
+table(aq$Day)
+```
+
+As expected, day 31 appears only 3 times. 
+
+
+# Correlations
+
+Let us find out the Pearson correlation coefficients between
+the different variables in the dataset:
+
+```{r}
+# Only numerical variables can be used for correlation
+columns <- c('Ozone.sqrt', 'Solar.R', 'Wind', 'Temp')
+# We identify non-na rows as rows with na values cause problems 
+rows <- rowSums(is.na(aq)) == 0
+# Compute correlation of variables and round to 2 digits
+round(cor(aq[rows, columns]), 2)
+```
+
+* Solar Radiation is moderately correlated with ozone concentration.
+* wind and ozone seem strongly correlated.
+* Temperature and ozone are strongly correlated. 
+* Very weak correlation between wind and solar radiation.
+* Temperature and solar radition are weakly correlated.
+* Temperature and wind are moderately correlated.
+
+
+Let us verify these correlations using scatter plots.
+
+
+##Very weak correlation: 
+```{r}
+qplot(Solar.R, Wind, data=aq, geom="point", color=Month)
+```
+
+##Weak correlation:
+```{r}
+qplot(Temp, Solar.R, data=aq, geom="point", color=Month)
+```
+
+##Moderate correlation:
+```{r}
+qplot(Solar.R, Ozone.sqrt, data=aq, color=Month, geom="point")
+```
+```{r}
+qplot(Temp, Wind, data=aq, color=Month, geom="point")
+```
+
+##Strong correlation
+```{r}
+qplot(Wind, Ozone.sqrt, data=aq, color=Month, geom='point')
+```
+
+```{r}
+qplot(Temp, Ozone.sqrt, data=aq, color=Month, geom='point')
+```
+

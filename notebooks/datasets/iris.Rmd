@@ -1,9 +1,148 @@
 ---
 title: "Exploration of IRIS Dataset"
 author: "Shailesh Kumar"
-output: html_notebook
+output: 
+  html_notebook:
+    toc: true
+    number_sections: true
 ---
+# Overview
+
+This dataset contains the measurements of the variables 
+sepal width and length, petal width and length for 50 flowers
+from 3 species of iris.
+
+Necessary packages:
 
 ```{r}
 require(ggplot2)
+```
+
+```{r}
+str(iris)
+```
+
+
+```{r}
+head(iris)
+```
+
+# Variables
+
+## Sepal.Length
+
+```{r}
+summary(iris$Sepal.Length)
+```
+
+Histogram of sepal length
+```{r}
+qplot(Sepal.Length, data=iris, geom='histogram', fill=Species, alpha=I(1/2))
+```
+
+
+## Sepal.Width
+
+```{r}
+summary(iris$Sepal.Width)
+```
+
+## Petal.Length
+
+
+```{r}
+summary(iris$Petal.Length)
+```
+
+Histogram of petal length
+```{r}
+qplot(Petal.Length, data=iris, geom='histogram')
+```
+
+Estimating a kernel denstiy for the distribution of petal length:
+```{r}
+qplot(Petal.Length, data=iris, geom='density')
+```
+
+Separating the petal length histogram on the basis of species:
+
+```{r}
+qplot(Petal.Length, data=iris, geom='histogram', fill=Species, alpha=I(0.5))
+```
+
+Densities on the basis of species
+```{r}
+qplot(Petal.Length, data=iris, geom='density', color=Species, fill=Species)
+```
+
+
+## Petal.Width
+
+```{r}
+summary(iris$Petal.Width)
+```
+
+
+
+# Correlations
+
+## With Species
+
+```{r}
+cor(iris$Sepal.Length, as.numeric(iris$Species), method='spearman')
+```
+
+```{r}
+cor(iris$Sepal.Width, as.numeric(iris$Species), method='spearman')
+```
+
+```{r}
+cor(iris$Petal.Length, as.numeric(iris$Species), method='spearman')
+```
+```{r}
+cor(iris$Petal.Length, as.numeric(iris$Species), method='spearman')
+```
+
+
+# Clustering
+
+## K-means 
+
+We note that petal length and width are very strongly correlated with species.
+Are these two numbers enough to correctly predict the species? 
+
+Let us prepare a data frame with only these two columns:
+```{r}
+iris2 <- iris[, c("Petal.Length", "Petal.Width")]
+```
+
+Let us perform k-means clustering on this data set
+```{r}
+num_clusters <- 3
+set.seed(1111)
+result <- kmeans(iris2, num_clusters, nstart=20)
+```
+
+The k-means algorithm has identified 3 centers:
+```{r}
+result$centers
+```
+
+The cluster assignments are as follows:
+```{r}
+result$cluster
+```
+
+Mapping between cluster assignment and original species labels:
+```{r}
+table(result$cluster, iris$Species)
+```
+Only 6 measurements have been misclassified.
+
+```{r}
+qplot(Petal.Width, Petal.Length, data=iris, color=Species)
+```
+
+```{r}
+qplot(Petal.Width, Petal.Length, data=iris, color=factor(result$cluster))
 ```

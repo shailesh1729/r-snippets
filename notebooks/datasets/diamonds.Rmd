@@ -1,0 +1,255 @@
+---
+title: "Exploration of Diamonds Dataset"
+author: "Shailesh Kumar"
+output: 
+  html_notebook:
+    toc: true
+    number_sections: true
+---
+
+This notebook explores the diamonds dataset shipped with the ggplot2 package.
+
+The diamonds dataset contains the price and other attributes like
+carat, cut, clarity, etc. of 53940 diamonds. 
+
+| Variable | Type | Description | Details |
+|----------|------|-------------|---------|
+| carat | numeric | weight of the diamond | 0.2 - 5.01  |
+| cut | ordinal | quality of the cut |  Fair      Good Very Good   Premium     Ideal| 
+| color | ordinal | diamond color | D     E     F     G     H     I     J | 
+| clarity | ordinal| clarity of the diamond | I1   SI2   SI1   VS2   VS1  VVS2  VVS1    IF | 
+| depth | numeric | total depth percentage | 43-79 | 
+| table | numeric | width of top of diamond relative to widest point | 43-95 | 
+| price | numeric | price in US dollars |
+| x | numeric | length in mm | 0-10.74 | 
+| y | numeric | width in mm | 0-58.9 | 
+| z | numeric | depth in mm | 0-31.8 | 
+
+
+Let's load essential libraries:
+```{r}
+require(ggplot2)
+# provides gam method for geom smooth
+require(mgcv)
+# provides natural splines for the lm method
+require(splines)
+```
+
+Number of variables:
+```{r}
+ncol(diamonds)
+```
+
+
+
+Size of the dataset:
+```{r}
+nrow(diamonds)
+```
+
+
+Let's see some rows from the dataset:
+```{r}
+head(diamonds)
+```
+
+# Variables
+
+## carat
+
+```{r}
+summary(diamonds$carat)
+```
+
+```{r}
+qplot(x=carat, data=diamonds, binwidth=1)
+qplot(x=carat, data=diamonds, binwidth=0.1)
+qplot(x=carat, data=diamonds, binwidth=0.01)
+```
+
+```{r}
+qplot(x=carat, data=diamonds, binwidth=0.1, fill=color)
+qplot(x=carat, data=diamonds, geom='density', color=color)
+```
+
+
+## cut
+
+```{r}
+table(diamonds$cut)
+```
+
+```{r}
+qplot(cut, data=diamonds, geom='bar', fill=cut)
+```
+
+## color
+
+```{r}
+table(diamonds$color)
+```
+
+```{r}
+qplot(color, data=diamonds, geom='bar', fill=color)
+```
+
+## clarity
+
+```{r}
+table(diamonds$clarity)
+```
+
+```{r}
+qplot(clarity, data=diamonds, geom='bar', fill=clarity)
+```
+
+## depth
+
+```{r}
+summary(diamonds$depth)
+```
+
+```{r}
+qplot(depth, data=diamonds)
+```
+
+## table
+
+```{r}
+summary(diamonds$table)
+```
+
+```{r}
+qplot(table, data=diamonds, geom='histogram')
+```
+
+## price
+
+```{r}
+summary(diamonds$price)
+```
+
+```{r}
+qplot(price, data=diamonds, geom='histogram')
+```
+
+Price by cut:
+```{r}
+qplot(cut, price, data=diamonds, geom='boxplot', color=cut)
+```
+
+```{r}
+qplot(cut, price / carat, data=diamonds, geom='boxplot', color=cut)
+```
+
+
+Price by clarity:
+```{r}
+qplot(x=clarity, y=price, color=clarity, data=diamonds, geom='boxplot')
+```
+
+```{r}
+qplot(x=clarity, y=price / carat, color=clarity, data=diamonds, geom='boxplot')
+```
+
+Price by color
+```{r}
+qplot(color, price, data=diamonds, color=color, geom='boxplot')
+```
+
+```{r}
+qplot(color, price/carat, data=diamonds, color=color, geom='boxplot')
+```
+```{r}
+qplot(color, price, data=diamonds, color=color, geom='jitter', alpha=I(1/20))
+```
+
+
+## x
+
+```{r}
+summary(diamonds$x)
+```
+
+```{r}
+qplot(x, data=diamonds, geom='histogram')
+```
+
+## y
+
+```{r}
+summary(diamonds$y)
+```
+
+```{r}
+qplot(y, data=diamonds, geom='histogram')
+```
+
+## z
+
+```{r}
+summary(diamonds$z)
+```
+
+```{r}
+qplot(z, data=diamonds, geom='histogram')
+```
+
+```{r}
+qplot(log(1+z), data=diamonds, geom='histogram')
+```
+
+# Correlations
+
+
+## carat vs price
+
+```{r}
+qplot(carat, price, data=diamonds, color=clarity, alpha=I(1/10))
+```
+
+```{r}
+qplot(log(carat), log(price), data=diamonds, color=clarity, alpha=I(1/5))
+```
+
+```{r}
+qplot(data=diamonds, x=carat, y=price, geom=c('point', 'smooth'))
+```
+
+
+```{r}
+qplot(data=diamonds, x=carat, y=price, geom=c('point', 'smooth'), 
+      method='gam', formula=y~s(x))
+```
+
+```{r}
+# fitting a linear model with a natural splines formula
+qplot(data=diamonds, x=carat, y=price, geom=c('point', 'smooth'), 
+      method='lm', formula=y~ns(x,5))
+```
+
+## weight vs volume
+
+```{r}
+qplot(carat, x * y * z, data=diamonds)
+```
+
+
+## cut vs color
+
+```{r}
+qplot(x=cut, data=diamonds, geom='bar', fill=color)
+```
+
+## cut vs clarity
+
+```{r}
+qplot(data=diamonds, x=cut, fill=clarity, geom='bar')
+```
+
+## clarity vs color
+
+```{r}
+qplot(data=diamonds, x=clarity, fill=color, geom='bar')
+```
+

@@ -1,7 +1,9 @@
 ---
 title: "Exploration of Orange Dataset"
 author: "Shailesh Kumar"
-output: html_notebook
+output: 
+  html_notebook:
+    toc: true
 ---
 This data set contains records of growth of orange trees. 
 Growth is measured in terms of the circumference of a tree
@@ -37,5 +39,11 @@ Tracking the growth for each tree in separate line:
 
 ```{r}
 qplot(data=Orange, x=age, y=circumference, geom="smooth", color=Tree, se=FALSE)
+```
+
+Estimating straight lines and drawing them along with the
+original data points:
+```{r}
+ggplot(data=Orange, mapping=aes(x=age, y=circumference, color=Tree)) + geom_point() + geom_smooth(method='lm', se=FALSE)
 ```
 

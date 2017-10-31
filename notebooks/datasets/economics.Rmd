@@ -1,0 +1,26 @@
+---
+title: "Exploration of Economics Dataset"
+author: "Shailesh Kumar"
+output: 
+  html_notebook:
+    toc: true
+---
+
+```{r}
+require(ggplot2)
+```
+
+```{r}
+head(economics)
+```
+
+```{r}
+nrow(economics)
+```
+
+
+```{r}
+qplot(date, unemploy, data=economics, geom='line')
+```
+
+

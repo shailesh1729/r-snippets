@@ -1,0 +1,47 @@
+---
+title: "Activation Functions"
+author: "Shailesh Kumar"
+output: 
+  html_notebook:
+    toc: true
+    number_sections: true
+---
+
+This notebook contains examples of drawing various mathematical functions.
+
+
+Necessary packages
+```{r}
+require(ggplot2)
+```
+
+# Polynomials
+
+```{r}
+ggplot(data.frame(x=c(0, 2)), mapping=aes(x=x)) + stat_function(fun=function(x){x^2})
+```
+
+```{r}
+f <- function(x){x^3}
+ggplot(data.frame(x=c(-2, 2)), mapping=aes(x=x)) + stat_function(fun=f)
+```
+
+
+# Trigonometric Functions
+
+
+```{r}
+f <- function(x) {sin(x)}
+ggplot(data.frame(x=c(-pi, pi)), mapping=aes(x=x)) + 
+  geom_hline(yintercept=0, color='red') +
+  geom_vline(xintercept=0, color='red') +
+  stat_function(fun=f, colour = "dodgerblue3") +
+  scale_x_continuous(name='x',
+                     breaks=round(c(-pi, -2:2, pi), digits=2)) +
+  scale_y_continuous(name='sin(x)') +
+  ggtitle('sin(x)')
+```
+
+
+# Exponentials
+
