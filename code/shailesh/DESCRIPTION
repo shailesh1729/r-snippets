@@ -1,0 +1,10 @@
+Package: shailesh
+Type: Package
+Title: Statistical Algorithms
+Version: 0.1.0
+Author: Shailesh Kumar
+Maintainer: Shailesh Kumar <shailesh@indigits.com>
+Description: Some statistical algorithms
+License: Apache
+Encoding: UTF-8
+LazyData: true
