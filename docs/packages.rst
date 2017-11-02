@@ -19,6 +19,9 @@ The standard R distribution comes with following packages.
     * - compiler
       - R byte code compiler
 
+    * - corrplot
+      - For plotting correlation matrix nicely
+
     * - datasets
       - Base R datasets
 

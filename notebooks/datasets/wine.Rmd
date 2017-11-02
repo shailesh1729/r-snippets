@@ -1,0 +1,326 @@
+---
+title: "Exploration of Wine Dataset"
+author: "Shailesh Kumar"
+output: 
+  html_notebook:
+    toc: true
+    number_sections: true
+---
+# Overview
+
+The *wine* dataset is available in *rattle.data* package. it contains
+the results of a chemical analysis of wine grown in specific area
+of Italy. There are 178 records and 14 variables. 
+
+| Variable | Type | Description |
+|----------|------|-------------|
+| Type | factor | Wine type: 1, 2, 3 |
+| Alcohol | | |
+| Malic | | Malic acid |
+| Ash |  | Ash |
+| Alcalinity | | Alcalinity of ash |
+| Magnesium |  | Magnesium |
+| Phenols | | Total phenols |
+| Flavanoids | | Flavanoids |
+| Nonflavanoids | | Non-flavanoid phenols |
+| Proanthocyanins | | |
+| Color | | Color intensity | 
+| Hue | | Hue |
+| Dilution |  | D280/OD315 of diluted wines |
+| Proline | | Proline |
+
+
+
+Loading required libraries
+```{r}
+require(rattle.data)
+require(ggplot2)
+require(corrplot)
+require(cluster)
+```
+
+
+Loading the data into search path
+```{r}
+data(wine, package='rattle.data')
+```
+
+
+```{r}
+head(wine)
+```
+
+```{r}
+dim(wine)
+```
+
+# Variables
+
+## Type
+
+```{r}
+summary(wine$Type)
+```
+
+## Alcohol
+
+```{r}
+summary(wine$Alcohol)
+```
+
+```{r}
+qplot(Type, Alcohol, data=wine, geom='boxplot', color=Type)
+```
+
+## Malic
+
+```{r}
+summary(wine$Malic)
+```
+
+
+```{r}
+qplot(Type, Malic, data=wine, geom='boxplot', color=Type)
+```
+
+## Ash
+
+```{r}
+summary(wine$Ash)
+```
+
+```{r}
+qplot(Type, Ash, data=wine, geom='boxplot', color=Type)
+```
+
+## Alcalinity
+
+```{r}
+summary(wine$Alcalinity)
+```
+
+```{r}
+qplot(Type, Alcalinity, data=wine, geom='boxplot', color=Type)
+```
+
+## Magnesium
+
+```{r}
+summary(wine$Magnesium)
+```
+
+```{r}
+qplot(Type, Magnesium, data=wine, geom='boxplot', color=Type)
+```
+
+## Phenols
+
+```{r}
+summary(wine$Phenols)
+```
+
+```{r}
+qplot(Type, Phenols, data=wine, geom='boxplot', color=Type)
+```
+
+## flavanoids
+
+```{r}
+summary(wine$Flavanoids)
+```
+
+```{r}
+qplot(Type, Flavanoids, data=wine, geom='boxplot', color=Type)
+```
+
+## Non Flavanoids
+```{r}
+summary(wine$Nonflavanoids)
+```
+
+```{r}
+qplot(Type, Nonflavanoids, data=wine, geom='boxplot', color=Type)
+```
+
+## Proanthocyanins
+
+```{r}
+summary(wine$Proanthocyanins)
+```
+
+```{r}
+qplot(Type, Proanthocyanins, data=wine, geom='boxplot', color=Type)
+```
+
+## Color
+
+```{r}
+summary(wine$Color)
+```
+
+```{r}
+qplot(Type, Color, data=wine, geom='boxplot', color=Type)
+```
+
+## Hue
+
+```{r}
+summary(wine$Hue)
+```
+
+```{r}
+qplot(Type, Hue, data=wine, geom='boxplot', color=Type)
+```
+
+## Dilution
+
+```{r}
+summary(wine$Dilution)
+```
+
+```{r}
+qplot(Type, Dilution, data=wine, geom='boxplot', color=Type)
+```
+
+## Proline
+
+```{r}
+summary(wine$Proline)
+```
+
+```{r}
+qplot(Type, Proline, data=wine, geom='boxplot', color=Type)
+```
+
+# Correlations
+
+```{r}
+wine.cor <- cor(wine[, -1])
+wine.cor[wine.cor == 1] <- 0
+corrplot(wine.cor, method='circle')
+wine.strong <- abs(wine.cor)
+wine.strong[wine.strong < 0.6] <- 0
+corrplot(wine.strong)
+```
+
+
+# Clustering
+
+Our goal is to predict the type of wine from the remaining
+data.
+
+Let us scale the remaining variables:
+
+```{r}
+wine.scaled <- scale(wine[-1])
+```
+
+## K-means clustering
+
+
+We will cluster the data into 3 groups.
+
+```{r}
+kmeans.result <- kmeans(wine.scaled, centers=3)
+```
+
+The centroids:
+
+```{r}
+kmeans.result$centers
+```
+
+The cluster labels
+```{r}
+kmeans.result$cluster
+```
+
+Size of each cluster
+```{r}
+kmeans.result$size
+```
+This can be computed as follows too:
+```{r}
+table(kmeans.result$cluster)
+```
+
+Within cluster sum of squares
+```{r}
+kmeans.result$withinss
+```
+
+Total within cluster sum of squares
+```{r}
+kmeans.result$tot.withinss
+sum(kmeans.result$withinss)
+```
+
+Between cluster sum of squares
+```{r}
+kmeans.result$betweenss
+```
+
+Total sum of squares
+```{r}
+kmeans.result$totss
+```
+
+
+Let us map it to actual type labels to compute the confusion matrix:
+```{r}
+table(kmeans.result$cluster, wine$Type)
+```
+
+It seems that there are 6 samples which have been
+incorrectly clustered. Otherwise, the clustering has
+delivered very good results.
+
+We can visualize the results of clustering in 2 dimensions. 
+This is achieved as follows:
+
+* The data-set is projected into two dimensions using 
+  principal component analysis.
+* The projected points are visualized on the graph with
+  ellipses surrounding each cluster.
+* The ellipse boundaries can be colored.
+```{r}
+clusplot(wine.scaled, kmeans.result$cluster, color=T, shade=T)
+```
+
+## Hierarchical clustering
+
+This works on the distances between points.
+
+Let us compute the Euclidean distances:
+
+```{r}
+distances.l2 <- dist(wine.scaled, method='euclidean')
+```
+
+Let us now run hierarchical clustering
+using Ward's minimum variance criterion:
+```{r}
+hclust.result <- hclust(distances.l2, method='ward.D')
+```
+
+The clustering result can be visualized in the form of
+a dendogram:
+```{r}
+plot(hclust.result)
+```
+
+The tree can be cut into clusters as follows:
+```{r}
+hclust.cluster <- cutree(hclust.result, k=3)
+```
+Let us look at the cluster labels:
+```{r}
+table(hclust.cluster)
+```
+
+Let us prepare our confusion matrix:
+```{r}
+table(hclust.cluster, wine$Type)
+```
+A total of 7 points seem to have been misclustered. 
+

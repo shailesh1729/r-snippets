@@ -162,9 +162,9 @@ Standard deviation of each variable in a data frame::
 
 .. rubric:: Pearson Correlation
 
-.. index:: cor, pearson correlation
+.. index:: cor, cor ; pearson, pearson correlation
 
-Pearson correlation coefficients are useful in estimating dependence between different variables.
+Pearson correlation coefficients are useful in estimating dependence between different (numeric) variables.
 The value varies from 0 to 1. This corresponds between no correlation to complete correlation.
 
 .. list-table::
@@ -209,6 +209,117 @@ Computing Pearson correlation coefficients for selected variables::
 	cyl  1.0000000 0.9020329 0.7824958
 	disp 0.9020329 1.0000000 0.8879799
 	wt   0.7824958 0.8879799 1.0000000
+
+
+
+Here is a way to map the actual correlation values to 5 ranges.
+
+Let us compute the correlation coefficients for numerical variables in iris dataset::
+
+	> iris.correlations <- cor(iris[, -c(5)])
+	> iris.correlations
+	             Sepal.Length Sepal.Width Petal.Length Petal.Width
+	Sepal.Length    1.0000000  -0.1175698    0.8717538   0.8179411
+	Sepal.Width    -0.1175698   1.0000000   -0.4284401  -0.3661259
+	Petal.Length    0.8717538  -0.4284401    1.0000000   0.9628654
+	Petal.Width     0.8179411  -0.3661259    0.9628654   1.0000000
+
+Note that we have left out the Species variable which is a factor variable.
+
+Let us use ``cut`` to break it into 5 ranges::
+
+	iris.correlation.levels <- cut(abs(iris.correlations), breaks=c(0, .2, .4, .6, .8, 1.0), include.lowest = T, labels = c('VW', 'WK', 'MD', 'ST', 'VS'))
+
+Cut returns a vector. We need to reshape it into a matrix::
+
+	> iris.correlation.levels<- matrix(iris.correlation.levels, nrow=4)
+	> iris.correlation.levels
+	     [,1] [,2] [,3] [,4]
+	[1,] "VS" "VW" "VS" "VS"
+	[2,] "VW" "VS" "MD" "WK"
+	[3,] "VS" "MD" "VS" "VS"
+	[4,] "VS" "WK" "VS" "VS"
+
+
+We are still missing the row names and column names. Let us get them back too::
+
+	> rownames(iris.correlation.levels) <- rownames(iris.correlations)
+	> colnames(iris.correlation.levels) <- colnames(iris.correlations)
+	> iris.correlation.levels
+	             Sepal.Length Sepal.Width Petal.Length Petal.Width
+	Sepal.Length "VS"         "VW"        "VS"         "VS"       
+	Sepal.Width  "VW"         "VS"        "MD"         "WK"       
+	Petal.Length "VS"         "MD"        "VS"         "VS"       
+	Petal.Width  "VS"         "WK"        "VS"         "VS"  
+
+
+Some interesting exercises::
+
+	> x <- rnorm(100)
+	> cor(x, x)
+	[1] 1
+	> cor(x, abs(x))
+	[1] 0.03242731
+	> cor(x, x^2)
+	[1] -0.01069063
+	> cor(abs(x), x^2)
+	[1] 0.9333162
+	> cor(x, x^3)
+	[1] 0.7631594
+	> cor(abs(x), abs(x)^3)
+	[1] 0.8048567
+	> cor(abs(x), x^4)
+	[1] 0.6817026
+	> cor(abs(x), log(abs(x)))
+	[1] 0.8360999
+
+
+.. rubric:: Spearman Correlation
+
+.. index::  cor ; spearman, spearman correlation
+
+The Spearman correlation method is suitable for computing correlation of a factor 
+variable with other variables. In the next example, we will compute the
+Spearman correlation of Species variable with other variables in the iris dataset.
+
+In order to compute the correlation, a factor variable needs to be cast as a numeric variable::
+
+	> as.numeric(iris$Species)
+	  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+	 [48] 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+	 [95] 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+	[142] 3 3 3 3 3 3 3 3 3
+
+We can use this for computing the correlations::
+
+	> cor(as.numeric(iris$Species), iris[, -5], method='spearman')
+	     Sepal.Length Sepal.Width Petal.Length Petal.Width
+	[1,]    0.7980781  -0.4402896    0.9354305   0.9381792
+
+Note that we have removed the Species variable from the second parameter for computing the correlations. 
+
+This may look a bit cumbersome if the number of variables is large. Here is a cleaner look:: 
+
+	> t(cor(as.numeric(iris$Species), iris[, -5], method='spearman'))
+	                   [,1]
+	Sepal.Length  0.7980781
+	Sepal.Width  -0.4402896
+	Petal.Length  0.9354305
+	Petal.Width   0.9381792
+
+It can be made a little bit more beautiful::
+
+	> iris.species.correlations <- t(cor(as.numeric(iris$Species), iris[, -5], method='spearman'))
+	> colnames(iris.species.correlations) <- c('correlation')
+	> iris.species.correlations
+	             correlation
+	Sepal.Length   0.7980781
+	Sepal.Width   -0.4402896
+	Petal.Length   0.9354305
+	Petal.Width    0.9381792
+
+
+We note that petal length and width are very strongly correlated with the species. 
 
 .. rubric:: Tukey Five Number Summary
 
@@ -304,8 +415,97 @@ Let us now scale it to zero mean unit variance::
 
 
 
+Scaling whole data frame:: 
 
-Group wise statistics
+	> mtcars2 <- scale(mtcars)
+
+Let us verify the means:: 
+
+	> colMeans(mtcars)
+	       mpg        cyl       disp         hp       drat         wt       qsec         vs 
+	 20.090625   6.187500 230.721875 146.687500   3.596563   3.217250  17.848750   0.437500 
+	        am       gear       carb 
+	  0.406250   3.687500   2.812500 
+  	> colMeans(mtcars2)
+	          mpg           cyl          disp            hp          drat            wt 
+	 7.112366e-17 -1.474515e-17 -9.085614e-17  1.040834e-17 -2.918672e-16  4.682398e-17 
+	         qsec            vs            am          gear          carb 
+	 5.299580e-16  6.938894e-18  4.510281e-17 -3.469447e-18  3.165870e-17 
+
+
+Note that the original means are still maintained inside the scaled data frame as an attribute::
+
+	> attr(mtcars2, 'scaled:center')
+	       mpg        cyl       disp         hp       drat         wt       qsec         vs 
+	 20.090625   6.187500 230.721875 146.687500   3.596563   3.217250  17.848750   0.437500 
+	        am       gear       carb 
+	  0.406250   3.687500   2.812500 
+
+And so are original standard deviations:: 
+
+	> attr(mtcars2, 'scaled:scale')
+	        mpg         cyl        disp          hp        drat          wt        qsec          vs 
+	  6.0269481   1.7859216 123.9386938  68.5628685   0.5346787   0.9784574   1.7869432   0.5040161 
+	         am        gear        carb 
+	  0.4989909   0.7378041   1.6152000 
+
+Verifying that the scaled data frame indeed has unit variance::
+
+	> apply(mtcars, 2, sd)
+	        mpg         cyl        disp          hp        drat          wt        qsec          vs 
+	  6.0269481   1.7859216 123.9386938  68.5628685   0.5346787   0.9784574   1.7869432   0.5040161 
+	         am        gear        carb 
+	  0.4989909   0.7378041   1.6152000 
+	> apply(mtcars, 2, var)
+	         mpg          cyl         disp           hp         drat           wt         qsec 
+	3.632410e+01 3.189516e+00 1.536080e+04 4.700867e+03 2.858814e-01 9.573790e-01 3.193166e+00 
+	          vs           am         gear         carb 
+	2.540323e-01 2.489919e-01 5.443548e-01 2.608871e+00 
+	> apply(mtcars2, 2, var)
+	 mpg  cyl disp   hp drat   wt qsec   vs   am gear carb 
+	   1    1    1    1    1    1    1    1    1    1    1 
+
+
+Scaling a data frame which contains a mixture of numeric and factor variables is a bit more involved.
+We will work with iris dataset for this example:: 
+
+	> iris2 <- iris
+
+We first identify the variables which are numeric::
+
+	> ind <- sapply(iris2, is.numeric)
+	> ind
+	Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
+	        TRUE         TRUE         TRUE         TRUE        FALSE 
+
+Next we scale these variables:: 
+
+	> iris2.scaled <- scale(iris2[ind])
+	> attr(iris2.scaled, 'scaled:center')
+	Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+	    5.843333     3.057333     3.758000     1.199333 
+	> attr(iris2.scaled, 'scaled:scale')
+	Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+	   0.8280661    0.4358663    1.7652982    0.7622377 
+
+Time to merge it back:: 
+
+	> iris2[ind] <- iris2.scaled
+
+Verify that the numeric columns have indeed been scaled::
+
+	> sapply(iris2[ind], mean)
+	 Sepal.Length   Sepal.Width  Petal.Length   Petal.Width 
+	-4.484318e-16  2.034094e-16 -2.895326e-17 -3.663049e-17 
+	> sapply(iris2[ind], sd)
+	Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+	           1            1            1            1 
+	> sapply(iris2[ind], var)
+	Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+	           1            1            1            1 
+
+
+Group Wise Statistics
 '''''''''''''''''''''''''''''''
 
 .. index:: tapply

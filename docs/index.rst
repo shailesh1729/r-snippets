@@ -28,6 +28,7 @@ for specific tasks, you can refer to these notes.
    text_processing
    data/index
    la/index
+   real_analysis/index
    discrete/index
    prob/index
    stats/index
@@ -39,7 +40,9 @@ for specific tasks, you can refer to these notes.
    oo/index
    packages
    datasets/index
+   tips/index
    kaggle/index
+
 
 
 Indices and tables
