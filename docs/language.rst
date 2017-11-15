@@ -8,16 +8,20 @@ Operator precedence rules
 
 * Function calls and grouping expressions:  (), {}
 * Index and lookup operators: 
+
 	* Indexing: [], [[]]
-	* Namespace access: ::, :::
-	* Component, slot extraction: $, @
+	* Namespace access: \:\:, \:\:\:
+	* Component, slot extraction: \$, \@
+
 * Arithmetic:
+
 	* Exponentiation: ^ (right to left)
 	* Unary plus, minus: +, -
 	* Sequence operator: : 
 	* Special operators: %any%, %%, %/%, %*%, %o%
-	* Multiply, Divide: *, /
+	* Multiply, Divide: \*, /
 	* add, subtract : +, -
+
 * Comparison: <, > , <=, >=, ==, != 
 * Negation : !
 * And: &, &&
@@ -805,9 +809,9 @@ Built-in Constants
 
 :math:`\pi`::
 
-> pi
-[1] 3.141593
-> 
+	> pi
+	[1] 3.141593
+	> 
 
 
 .. index:: months
@@ -1253,7 +1257,7 @@ Generic methods associated with ``table`` class::
 	[15] tail         
 
 
-Some of the functions may not be visible. They are marked with *::
+Some of the functions may not be visible. They are marked with \*::
 
 	> methods(coef)
 	[1] coef.aov*     coef.Arima*   coef.default* coef.listof*  coef.maov*    coef.nls*    

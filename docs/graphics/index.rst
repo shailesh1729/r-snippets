@@ -11,4 +11,5 @@ A detailed overview of relevant packages is covered at `CRAN <https://cran.r-pro
    ggplot/index
    special_charts
    params
+   devices
  

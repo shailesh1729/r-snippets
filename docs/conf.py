@@ -34,8 +34,11 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
-    'sphinxcontrib.fulltoc'
+    'sphinxcontrib.fulltoc',
+    'sphinxcontrib.bibtex'
 ]
+
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -219,7 +222,7 @@ latex_elements = {
 #'pointsize': '10pt',
 
 # Additional stuff for the LaTeX preamble.
-#'preamble': '',
+'preamble': '\usepackage{tikz}',
 
 # Latex figure (float) alignment
 #'figure_align': 'htbp',
@@ -291,3 +294,14 @@ texinfo_documents = [
 #texinfo_no_detailmenu = False
 
 highlight_language = "R" 
+
+# Settings for sphinxcontrib-tikz extension
+if False:
+  extensions.append('sphinxcontrib.tikz')
+  tikz_proc_suite = 'Netpbm'
+  tikz_tikzlibraries  = ''
+
+
+# Configuration for texfigure
+if False:
+  extensions.append('sphinxcontrib.texfigure')

@@ -15,6 +15,7 @@ However, if you are familiar with
 R and want to quickly refresh your memory or look for code
 for specific tasks, you can refer to these notes.
 
+
 .. Some of the sample data has been obtained from here https://support.spatialkey.com/spatialkey-sample-csv-data/.
 
 .. toctree::
@@ -42,6 +43,8 @@ for specific tasks, you can refer to these notes.
    datasets/index
    tips/index
    kaggle/index
+   package_development
+   unusual
 
 
 

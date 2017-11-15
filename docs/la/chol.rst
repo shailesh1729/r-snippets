@@ -3,12 +3,12 @@ Cholesky Decomposition
 
 Let's choose a symmetric positive definite matrix::
 
-> A <- matrix(c(4, 12, -16, 12, 37, -43, -16, -43, 98), nrow=3)
-> A
-     [,1] [,2] [,3]
-[1,]    4   12  -16
-[2,]   12   37  -43
-[3,]  -16  -43   98
+    > A <- matrix(c(4, 12, -16, 12, 37, -43, -16, -43, 98), nrow=3)
+    > A
+         [,1] [,2] [,3]
+    [1,]    4   12  -16
+    [2,]   12   37  -43
+    [3,]  -16  -43   98
 
 Let's perform its Cholesky decomposition::
 

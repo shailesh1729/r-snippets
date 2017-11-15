@@ -98,7 +98,7 @@ Stem and Leaf Plots
 These are completely textual plots. A numeric vector is plotted as follows.
 From each number, the first and last digits are taken. First digit
 becomes the stem, last digit becomes the left.  Stems go to
-the left of | and leaves go to the right of |. 
+the left of vertical bar and leaves go to the right of vertical bar. 
 
 
 ::

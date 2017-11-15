@@ -40,11 +40,18 @@ The standard R distribution comes with following packages.
     * - grid
       - A rewrite of the graphics layout capabilities, plus some support for interaction
 
+
+    * - magick
+      - Image Processing
+
     * - methods
       - Formally defined methods and classes for R objects, plus other programming tools, as described in the Green Book
 
     * - parallel
       - Support for parallel computation, including by forking and by sockets, and random-number generation
+
+    * - pdftools
+      - tools for working with PDF documents
 
     * - rattle
       - R Analytic Tool To Learn Easily (Rattle) provides a Gnome (RGtk2) based interface to R functionality for data science
@@ -63,6 +70,9 @@ The standard R distribution comes with following packages.
 
     * - tcltk
       - Interface and language bindings to Tcl/Tk GUI elements
+
+    * - tesseract
+      - Optical Character Recognition (OCR)
 
     * - tools
       - Tools for package development and administration

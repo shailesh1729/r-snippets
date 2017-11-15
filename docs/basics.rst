@@ -292,6 +292,7 @@ Coercing a vector into a row vector::
 .. index:: column vector
 
 Coercing into a column vector::
+
 	> t(t(v))
 	     [,1]
 	[1,]    1
