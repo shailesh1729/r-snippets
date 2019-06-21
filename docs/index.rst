@@ -20,7 +20,6 @@ for specific tasks, you can refer to these notes.
 
 .. toctree::
    :maxdepth: 2
-   :numbered:
 
    environment
    basics

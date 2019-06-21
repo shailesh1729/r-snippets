@@ -187,7 +187,7 @@ For loop for computing sum of squares::
 	}
 
 
-Off course a better solution is ``sum(ul^2)``.
+Of course a better solution is ``sum(ul^2)``.
 
 .. index:: nested for
 
@@ -236,7 +236,7 @@ While loop with next and break ::
 
 .. index:: iter, iterators
 
-..rubric:: iterators
+.. rubric:: iterators
 
 Installing the package:: 
 
@@ -594,14 +594,18 @@ type of its fundamental constituents::
 	[1] "numeric"
 
 Class of an object::
+
+
 	> class(x)
 	[1] "integer"
 
 Type of an object::
+
 	> typeof(x)
 	[1] "integer"
 
 Length of an object::	
+
 	> length(x)
 	[1] 10
 
